@@ -1,0 +1,8 @@
+[phases.setup]
+nixPkgs = ["jdk17", "bash"]
+
+[phases.build]
+cmds = ["javac server/RelayServer.java"]
+
+[phases.start]
+cmd = "java -cp server server.RelayServer"
