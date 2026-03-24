@@ -2,9 +2,7 @@
 nixPkgs = ["jdk17", "bash"]
 
 [phases.build]
-# This compiles the file right where it is
-cmds = ["javac server/RelayServer.java"]
+cmds = ["javac RelayServer.java"]
 
 [phases.start]
-# This tells Java to look INSIDE the server folder for the main class
-cmd = "java -cp server RelayServer"
+cmd = "java RelayServer"

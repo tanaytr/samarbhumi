@@ -1,1 +1,1 @@
-web: javac server/RelayServer.java && java -cp server server.RelayServer
+web: javac RelayServer.java && java RelayServer
