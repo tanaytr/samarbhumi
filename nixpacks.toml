@@ -2,9 +2,9 @@
 nixPkgs = ["jdk17", "bash"]
 
 [phases.build]
-# We compile from the root so the package structure is preserved
+# This compiles the file right where it is
 cmds = ["javac server/RelayServer.java"]
 
 [phases.start]
-# We tell Java to look at the current directory (.) for the 'server' package
-cmd = "java -cp . server.RelayServer"
+# This tells Java to look INSIDE the server folder for the main class
+cmd = "java -cp server RelayServer"
