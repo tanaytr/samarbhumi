@@ -24,9 +24,11 @@ jobs:
           distribution: 'temurin'
 
       - name: Compile Game
+        shell: bash
         run: |
           mkdir -p bin
-          javac -encoding UTF-8 -d bin src/com/samarbhumi/exception/*.java src/com/samarbhumi/core/*.java src/com/samarbhumi/physics/*.java src/com/samarbhumi/map/*.java src/com/samarbhumi/weapon/*.java src/com/samarbhumi/entity/*.java src/com/samarbhumi/ai/*.java src/com/samarbhumi/progression/*.java src/com/samarbhumi/audio/*.java src/com/samarbhumi/net/*.java src/com/samarbhumi/ui/*.java src/Main.java
+          find src -name "*.java" > sources.txt
+          javac -encoding UTF-8 -d bin @sources.txt
 
       - name: Create JAR
         run: |
