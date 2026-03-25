@@ -2,6 +2,7 @@ package com.samarbhumi.ui;
 
 import com.samarbhumi.entity.Player;
 import com.samarbhumi.core.*;
+import com.samarbhumi.net.NetManager;
 import com.samarbhumi.core.Enums.*;
 import com.samarbhumi.progression.PlayerProfile;
 import com.samarbhumi.audio.AudioEngine;
@@ -14,11 +15,14 @@ import java.awt.geom.AffineTransform;
 // ============================================================================
 class MainMenuScreen {
 
-    public enum Action { NONE, PLAY, PROFILE, STORE, SETTINGS, QUIT, SWITCH_PROFILE }
+    public enum Action { NONE, PLAY, PROFILE, STORE, SETTINGS, LEADERBOARD, SWITCH_PROFILE, QUIT }
     private float time = 0f;
+    private boolean showLeaderboard = false;
     private final int W = UIRenderer.W, H = UIRenderer.H, CX = W / 2;
     private float[] solX  = {-50, W + 50, 180, W - 180};
     private float[] solDir = {1, -1, 1, -1};
+    private java.util.List<PlayerProfile.LeaderboardEntry> lbCache = null;
+    private float lbTimer = 0f;
 
     public void update(float dt) {
         time += dt;
@@ -26,6 +30,11 @@ class MainMenuScreen {
             solX[i] += solDir[i] * 18f * dt;
             if (solX[i] > W + 80) solX[i] = -80;
             if (solX[i] < -80)   solX[i] = W + 80;
+        }
+        lbTimer -= dt;
+        if (lbCache == null || lbTimer <= 0) {
+            lbCache = PlayerProfile.getLeaderboard();
+            lbTimer = 10f; // Refresh every 10s
         }
     }
 
@@ -35,19 +44,23 @@ class MainMenuScreen {
             drawSilhouette(g, (int) solX[i], H - 95, solDir[i] > 0);
 
         // Buttons — right column
-        int bw = 260, bh = 48, bx = CX + 80, gap = 56;
-        int by = (H - (6 * bh + 5 * gap)) / 2 + 10;
+        int bw = 260, bh = 48, bx = CX + 80, gap = 44;
+        int by = (H - (7 * bh + 6 * gap)) / 2;
 
         UIRenderer.button(g, "[ PLAY ]",           bx, by,             bw, bh, mx, my, false, new Color(35, 100, 15));
         UIRenderer.button(g, "[ PROFILE ]",        bx, by + (bh+gap),  bw, bh, mx, my, false, new Color(30, 65, 20));
         UIRenderer.button(g, "[ STORE ]",           bx, by+2*(bh+gap),  bw, bh, mx, my, false, new Color(100, 70, 10));
         UIRenderer.button(g, "[ SETTINGS ]",        bx, by+3*(bh+gap),  bw, bh, mx, my, false, new Color(30, 52, 30));
-        UIRenderer.button(g, "[ SWITCH PROFILE ]",  bx, by+4*(bh+gap),  bw, bh, mx, my, false, new Color(50, 50, 10));
-        UIRenderer.button(g, "[ QUIT ]",            bx, by+5*(bh+gap),  bw, bh, mx, my, false, new Color(110, 20, 15));
+        UIRenderer.button(g, "[ LEADERBOARD ]",     bx, by+4*(bh+gap),  bw, bh, mx, my, false, new Color(80, 50, 120));
+        UIRenderer.button(g, "[ SWITCH PROFILE ]",  bx, by+5*(bh+gap),  bw, bh, mx, my, false, new Color(50, 50, 10));
+        UIRenderer.button(g, "[ QUIT ]",            bx, by+6*(bh+gap),  bw, bh, mx, my, false, new Color(110, 20, 15));
 
         // Logo — left side, vertically centred with the whole button block
-        int logoY = by + (6*bh + 5*gap)/2 - 18;  // centre of button stack
+        int logoY = by + (7*bh + 6*gap)/2 - 18;  // centre of button stack
         UIRenderer.drawLogo(g, (int)(W * 0.30f), logoY, time);
+
+        // Conditional Leaderboard Modal
+        if (showLeaderboard) drawLeaderboardModal(g, mx, my);
 
         // Profile badge top-left — profile may be null (guest mode)
         if (profile != null) drawProfileBadge(g, profile);
@@ -55,7 +68,7 @@ class MainMenuScreen {
 
         g.setFont(GameConstants.F_SMALL);
         g.setColor(new Color(80, 120, 40, 150));
-        g.drawString("v1.1  Built with Java", 10, H - 8);
+        g.drawString("v1.2  Built with Java", 10, H - 8);
 
         g.setFont(GameConstants.F_SMALL);
         g.setColor(new Color(100, 150, 50, 120));
@@ -67,15 +80,29 @@ class MainMenuScreen {
     }
 
     public Action handleClick(int mx, int my) {
-        int bw = 260, bh = 48, bx = CX + 80, gap = 56;
-        int by = (H - (6 * bh + 5 * gap)) / 2 + 10;
+        if (showLeaderboard) {
+            int pw = 450, ph = 350;
+            int px = (W - pw) / 2, py = (H - ph) / 2;
+            if (new Rectangle(px + pw / 2 - 60, py + ph - 60, 120, 36).contains(mx, my)) {
+                showLeaderboard = false;
+            }
+            return Action.NONE;
+        }
+
+        int bw = 260, bh = 48, bx = CX + 80, gap = 44;
+        int by = (H - (7 * bh + 6 * gap)) / 2;
         if (mx >= bx && mx <= bx + bw) {
-            // Buttons: PLAY(0), PROFILE(1), STORE(2), SETTINGS(3), SWITCH_PROFILE(4), QUIT(5)
             Action[] order = { Action.PLAY, Action.PROFILE, Action.STORE,
-                               Action.SETTINGS, Action.SWITCH_PROFILE, Action.QUIT };
-            for (int i = 0; i < order.length; i++)
-                if (my >= by + i*(bh+gap) && my <= by + i*(bh+gap) + bh)
+                               Action.SETTINGS, Action.LEADERBOARD, Action.SWITCH_PROFILE, Action.QUIT };
+            for (int i = 0; i < order.length; i++) {
+                if (my >= by + i*(bh+gap) && my <= by + i*(bh+gap) + bh) {
+                    if (order[i] == Action.LEADERBOARD) {
+                        showLeaderboard = true;
+                        return Action.NONE;
+                    }
                     return order[i];
+                }
+            }
         }
         return Action.NONE;
     }
@@ -127,6 +154,63 @@ class MainMenuScreen {
         g.fillRect(x + 21, y - 14, 5, 20);
         g.setTransform(saved);
     }
+
+    private void drawLeaderboardModal(Graphics2D g, int mx, int my) {
+        int pw = 450, ph = 350;
+        int px = (W - pw) / 2, py = (H - ph) / 2;
+        
+        // Dim background
+        g.setColor(new Color(0, 0, 0, 180));
+        g.fillRect(0, 0, W, H);
+        
+        UIRenderer.panel(g, px, py, pw, ph, "Local Leaderboard");
+        
+        int ry = py + 85;
+        g.setFont(GameConstants.F_SMALL);
+        g.setColor(GameConstants.C_DIM);
+        // Draw headers individually for precise alignment
+        g.drawString("RANK",   px + 30,  ry - 20);
+        g.drawString("PLAYER", px + 95,  ry - 20);
+        g.drawString("LEVEL",  px + 280, ry - 20);
+        g.drawString("TOTAL XP", px + 355, ry - 20);
+
+        if (lbCache == null || lbCache.isEmpty()) {
+            g.setColor(Color.WHITE);
+            g.drawString("No profiles found.", px + pw/2 - 70, ry + 50);
+        } else {
+            for (int i = 0; i < lbCache.size(); i++) {
+                PlayerProfile.LeaderboardEntry e = lbCache.get(i);
+                int rowY = ry + i * 40;
+                
+                // Rank
+                g.setFont(GameConstants.F_SUBHEAD);
+                g.setColor(i == 0 ? GameConstants.C_GOLD : Color.WHITE);
+                g.drawString("#" + (i + 1), px + 30, rowY);
+
+                // Name
+                g.setFont(GameConstants.F_HUD);
+                g.setColor(Color.WHITE);
+                String name = e.name();
+                if (name.length() > 14) name = name.substring(0, 14);
+                g.drawString(name, px + 95, rowY);
+
+                // Level
+                g.setColor(GameConstants.C_GOLD2);
+                g.drawString("Lv " + e.level(), px + 280, rowY);
+
+                // XP (Right-aligned under the header)
+                g.setFont(GameConstants.F_SMALL);
+                g.setColor(GameConstants.C_DIM);
+                String xpStr = String.format("%,d", e.xp());
+                g.drawString(xpStr, px + 355, rowY);
+
+                g.setColor(new Color(80, 120, 40, 60));
+                g.drawLine(px + 30, rowY + 12, px + pw - 30, rowY + 12);
+            }
+        }
+        
+        UIRenderer.button(g, "BACK", px + pw / 2 - 60, py + ph - 60, 120, 36, mx, my);
+    }
 }
 
 // ============================================================================
@@ -149,14 +233,13 @@ class LobbyScreen {
     private String  nameInput   = "";
 
     // Online lobby
-    private boolean creatingLobby = false;
     private String  lobbyCode     = "";
     private String  joinCodeInput = "";
     private boolean editingJoinCode = false;
     private String  onlineStatus  = "";
     private int     onlineTeamSub = 0;
 
-    private final int W = UIRenderer.W, H = UIRenderer.H, CX = W / 2;
+    private final int W = UIRenderer.W, CX = W / 2;
 
     private static final String[] MAP_NAMES = {"Warzone Alpha", "Jungle Ruins", "Steel Fortress", "City Ruins"};
     private static final String[] MAP_DESC  = {
@@ -395,16 +478,16 @@ class LobbyScreen {
             g.setFont(GameConstants.F_HUD);
             g.setColor(onlineStatus.startsWith("Error") ? GameConstants.C_RED : new Color(80,200,80));
             g.drawString(onlineStatus, L + 20, cy);
+            
+            // Draw player count
+            if (NetManager.currentLobby != null) {
+                cy += 20;
+                g.setColor(GameConstants.C_GOLD2);
+                g.drawString("Players in Lobby: " + NetManager.totalPlayers + " / 4", L + 20, cy);
+            }
         }
 
-        // Info note
-        cy = startY + panelH - 55;
-        g.setColor(new Color(30,30,30,180));
-        g.fillRoundRect(L+10, cy, 720, 48, 6, 6);
-        g.setFont(GameConstants.F_SMALL);
-        g.setColor(new Color(120,180,60,160));
-        g.drawString("Online mode requires a running relay server. See docs/DEPLOY.md for setup instructions.", L + 18, cy + 16);
-        g.drawString("Free hosting: Railway.app or Fly.io  |  Up to 8 players per lobby", L + 18, cy + 32);
+
     }
 
     private void renderInfoBox(Graphics2D g, int L, int y, int width) {
@@ -556,7 +639,8 @@ class LobbyScreen {
         }
 
         // Name edit
-        int nameY = modeY + 46;
+        int toggleY = modeY + 42;
+        int nameY = toggleY + 36;
         int nbx = L + 105;
         if (new Rectangle(nbx,nameY,200,28).contains(mx,my)||new Rectangle(nbx+208,nameY,48,28).contains(mx,my)) { editingName=true; return Action.NONE; }
 
@@ -564,22 +648,49 @@ class LobbyScreen {
         if (mode == GameMode.ONLINE) {
             // Create lobby
             if (new Rectangle(L+20, startY+86, 200, 38).contains(mx,my)) {
+                onlineStatus = "Connecting to server...";
                 lobbyCode = generateLobbyCode();
-                onlineStatus = "Lobby created! Share code: " + lobbyCode;
+                new Thread(() -> {
+                    if (NetManager.connectAndCreate(lobbyCode)) {
+                        onlineStatus = "Lobby created! Share code: " + lobbyCode;
+                    } else {
+                        onlineStatus = "Error: Failed to connect to server.";
+                        lobbyCode = "";
+                    }
+                }).start();
                 return Action.NONE;
             }
             // Join code field
             if (new Rectangle(L+20, startY+150, 160, 32).contains(mx,my)) { editingJoinCode=true; return Action.NONE; }
             // Join button
             if (new Rectangle(L+190, startY+150, 80, 32).contains(mx,my)) {
-                if (joinCodeInput.length()>=4) onlineStatus="Connecting to lobby "+joinCodeInput+"...";
-                else onlineStatus="Error: Enter a valid 4-6 character code";
+                if (joinCodeInput.length()>=4) {
+                    onlineStatus="Connecting to lobby "+joinCodeInput+"...";
+                    new Thread(() -> {
+                        NetManager.connectAndJoin(joinCodeInput);
+                        if ("JOINED".equals(NetManager.lastResponse)) {
+                            lobbyCode = joinCodeInput;
+                            onlineStatus = "Joined Lobby " + lobbyCode + ". Waiting for Host...";
+                        } else {
+                            onlineStatus = "Error: Lobby not found or server offline.";
+                        }
+                    }).start();
+                } else onlineStatus="Error: Enter a valid 4-6 character code";
                 return Action.NONE;
             }
-            // Start for online falls back to offline until server implemented
+            // Start button
             if (new Rectangle(CX-130, 583, 290, 58).contains(mx,my)) {
-                onlineStatus="Error: Server not configured. See docs/DEPLOY.md";
-                return Action.NONE; // don't actually start online — not wired yet
+                if (lobbyCode.isEmpty()) {
+                    onlineStatus = "Error: Create or Join a lobby first.";
+                    return Action.NONE;
+                }
+                if (NetManager.localPlayerIdx == 0) { // Host
+                    NetManager.startMatchBroadcast();
+                    return Action.START;
+                } else {
+                    onlineStatus = "Waiting for Host to start...";
+                    return Action.NONE;
+                }
             }
         } else {
             // Map cards
@@ -610,6 +721,7 @@ class LobbyScreen {
     public MapId     getSelectedMap()  { return MapId.values()[selectedMap]; }
     public int       getNumBots()      { return mode==GameMode.TWO_PLAYER||mode==GameMode.ONLINE ? 0 : numBots; }
     public Difficulty getDifficulty()  { return Difficulty.values()[diffIdx]; }
+    public GameMode  getMode()        { return mode; }
     public boolean   isTwoPlayer()     { return mode==GameMode.TWO_PLAYER; }
     public boolean   isOnlineMode()    { return mode==GameMode.ONLINE; }
     public boolean   isTeamMode()      { return teamMode; }
@@ -617,6 +729,7 @@ class LobbyScreen {
     public String    getNameInput()    { return nameInput; }
     public boolean   isEditingName()   { return editingName||editingJoinCode; }
     public void      setNameDefault(String n) { if (nameInput.isEmpty()) nameInput=n; }
+    public void      setOnlineStatus(String status) { this.onlineStatus = status; }
 }
 
 // ============================================================================
@@ -964,8 +1077,6 @@ class PostMatchScreen {
         int iy = ty;
 
         // Team score banner
-        String banner = blueWins ? "VAJRA WINS  " + blueKills + " – " + redKills + "  PRALAY"
-                                 : "VAJRA  " + blueKills + " – " + redKills + "  PRALAY WINS";
         g.setFont(GameConstants.F_SUBHEAD);
         FontMetrics bfm = g.getFontMetrics();
         // Vajra part
@@ -1151,8 +1262,8 @@ class SwitchProfileOverlay {
         }
 
         // Sign out + Cancel buttons at bottom
-        UIRenderer.button(g, "[ SIGN OUT ]", px+pw-240, py+ph-60, 140, 38, mx, my, false, new Color(120,25,12));
-        UIRenderer.button(g, "[ CANCEL ]",   px+pw-90,  py+ph-60, 80,  38, mx, my, false, new Color(35,58,20));
+        UIRenderer.button(g, "SIGN OUT", px+pw-240, py+ph-60, 140, 38, mx, my, false, new Color(120,25,12));
+        UIRenderer.button(g, "CANCEL",   px+pw-90,  py+ph-60, 80,  38, mx, my, false, new Color(35,58,20));
     }
 
     /** Returns the profile name to switch to, or "" */

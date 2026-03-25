@@ -1,0 +1,31 @@
+SAMARBHUMI — War Never Ends (v1.2 Multiplayer Update)
+----------------------------------
+
+SYSTEM REQUIREMENTS:
+- OS: Windows 10/11 (64-bit)
+- Java: JDK 17 or later (The installer will check for this)
+- Network: Stable internet connection (required for Online Multiplayer)
+- Display: 1280x720 recommended
+
+PLAYER 1 CONTROLS (Keyboard + Mouse):
+- Move: A / D
+- Jump: W (Double-tap for Double Jump)
+- Crouch: S
+- Jetpack: E (Hold)
+- Fire: Left Mouse Button (Mouse Aim)
+- Melee: Q
+- Reload: R
+- Swap Weapon: Tab
+- Pick Up Item: F
+
+PLAYER 2 CONTROLS (Local Co-op):
+- Move: Arrow Keys (Left/Right)
+- Jump: Up Arrow (Double-tap for Double Jump)
+- Crouch: Down Arrow
+- Jetpack: Numpad 8
+- Fire: Numpad 0
+- Melee: Numpad 5 / Delete
+- Reload: Numpad 5
+- Swap Weapon: Page Down
+
+Press ESC during gameplay to Pause.

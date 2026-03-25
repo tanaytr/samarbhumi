@@ -5,7 +5,13 @@
 
 ## Changelog
 
-### v1.1 (current)
+### v1.2 (current)
+- **Online Multiplayer** — Full implementation of relay-based networking with 4-letter lobby codes.
+- **Starry Landing Page** — Added dynamic starry sky and improved UI aesthetics.
+- **8-bit BGM** — Integrated procedural background music using Web Audio API.
+- **Maximized Window** — Application now launches in a maximized state for better UX.
+
+### v1.1
 - **Home page always loads first** — app starts on Main Menu, never forces profile select on launch
 - **Guest mode** — players can browse menus without a profile; profile is only required to play
 - **No-profile popup** — clicking PLAY without a profile shows a clear dismissible message with instructions
@@ -178,9 +184,9 @@ Tile palette chosen by `map.getMapStyle()` — each map has unique colors, textu
 The `ONLINE` mode tab in Battle Setup is UI-complete. To activate it:
 
 ### Server Setup (Free)
-1. Deploy `server/RelayServer.java` to [Railway.app](https://railway.app) or [Fly.io](https://fly.io) (both have free tiers)
-2. Server uses plain TCP sockets — no library dependencies
-3. Update `NetworkConfig.SERVER_HOST` in `GameConstants.java` with your server URL
+1. Deploy `RelayServer.java` (included in root) to services like Railway.app or Render.com
+2. Server uses plain TCP sockets — zero external dependencies
+3. Update `NET_HOST` and `NET_PORT` in `GameConstants.java` to match your deployment
 
 ### How It Works (Lockstep Model)
 - One player creates a lobby (gets a 4-letter code)
@@ -212,6 +218,7 @@ Samarbhumi/
 │       ├── ai/                 BotController
 │       ├── audio/              AudioEngine
 │       ├── progression/        PlayerProfile
+│       ├── net/                NetManager, NetworkSession
 │       ├── ui/                 GameWindow, GameScreen, Screens, HUDRenderer, UIRenderer,
 │       │                       MapRenderer, PlayerRenderer
 │       └── exception/          GameException, SaveException
@@ -226,11 +233,11 @@ Samarbhumi/
 
 ## 9. Known Limitations & Future Work
 
-- **Online multiplayer** — relay server not included; architecture documented above
-- **Audio** — synthesized sounds via `AudioEngine`; no external audio files needed
-- **Resolution** — fixed 1280×720 logical resolution with aspect-ratio letterboxing; window is resizable
-- **Platform** — tested on Windows 10/11; should work on Linux/Mac with minor font differences
+- **Online multiplayer** — Fully functional relay-based system included.
+- **Audio** — synthesized sounds via `AudioEngine` + Web Audio BGM.
+- **Resolution** — fixed 1280×720 logical resolution with aspect-ratio letterboxing.
+- **Platform** — Cross-platform support (Windows/Linux/Mac).
 
 ---
 
-*Built with Java 17+ | Swing + Java2D | ~5,600 lines of code | v1.1*
+*Built with Java 17+ | Swing + Java2D | ~6,500 lines of code | v1.2*

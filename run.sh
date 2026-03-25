@@ -1,7 +1,7 @@
 #!/bin/bash
 echo "================================================"
 echo " SAMARBHUMI ANTIM - War Never Ends"
-echo " Java 2D Action Shooter"
+echo " Java 2D Action Shooter  v1.2"
 echo "================================================"
 echo ""
 
@@ -34,6 +34,8 @@ javac -encoding UTF-8 -d bin \
   src/com/samarbhumi/ui/GameScreen.java \
   src/com/samarbhumi/ui/Screens.java \
   src/com/samarbhumi/ui/GameWindow.java \
+  src/com/samarbhumi/net/NetManager.java \
+  src/com/samarbhumi/net/NetworkSession.java \
   src/Main.java
 
 if [ $? -ne 0 ]; then

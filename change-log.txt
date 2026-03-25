@@ -1,0 +1,50 @@
+==================================================
+  SAMARBHUMI - War Never Ends (Multiplayer Update)
+               CHANGE-LOG.TXT
+==================================================
+
+[1] NEW FILES & INFRASTRUCTURE
+--------------------------------------------------
+- [NEW] RelayServer.java (Root)
+  A Java-based TCP relay server (2-4 players) for multiplayer synchronization.
+- [NEW] Procfile (Root)
+  Deployment configuration for hosting the relay server on Render/Railway.
+- [NEW] src/com/samarbhumi/net/NetManager.java
+  Networking hub for client-side lobby logic, input buffering, and sockets.
+- [NEW] src/com/samarbhumi/net/NetworkSession.java
+  Deterministic lockstep game session that pauses for input synchronization.
+- [NEW] docs/BRANDING_AND_DISTRIBUTION.md
+  New master guide for custom icons and native packaging (.exe, .app, .deb).
+
+[2] MULTIPLAYER & ONLINE FEATURES
+--------------------------------------------------
+- LOCKSTEP ENGINE: Every client runs the same simulation by exchanging 
+  input bitmasks. This ensures zero state-desync.
+- LOBBY SYSTEM: Integrated "Create" and "Join" lobby functionality.
+- RANDOM LOBBY CODES: Unique 4-letter alphanumeric invite codes (e.g., XKRD).
+- BROADCAST PROTOCOL: Implemented Host-to-Client match starting sequence.
+- GUEST AUTO-LAUNCH: Detecting lobby status changes to auto-start guests.
+
+[3] BRANDING & UI ADDITIONS
+--------------------------------------------------
+- DYNAMIC LANDING: index.html upgraded with starry sky and premium gradients.
+- NATIVE ICONS: Added Win/Mac/Linux download buttons to landing page.
+- 8-BIT BGM: Integrated Web Audio API for procedural background music.
+- MAXIMIZED LAUNCH: App now opens in MAXIMIZED_BOTH state by default.
+
+[4] CRITICAL BUG FIXES & REFACTORS
+--------------------------------------------------
+- [Screens.java] - Fixed "Create Lobby" click bug (coord mismatch).
+- [Screens.java] - Fixed sign-out clipping (removed text brackets).
+- [Screens.java] - Fixed syntax & misplaced braces in LobbyScreen.
+- [GameSession.java] - Fixed jetpack particle resolution bug.
+- [GameSession.java] - Refactored update() for remote input injection.
+- [GameWindow.java] - Restored missing core/entity imports.
+- [HUDRenderer.java] - Restored barBg/barFg methods for HP/Fuel bars.
+- [BotController.java] - Refactored constructor for GameSession dependency.
+- [RelayServer.java] - Fixed ServerSocket resource leak.
+- [Build Scripts] - Updated run.bat and run.sh to include new 'net' package.
+
+==================================================
+  Session Complete - Multiplayer Ready for Launch
+==================================================

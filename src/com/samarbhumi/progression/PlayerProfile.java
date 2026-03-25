@@ -14,6 +14,8 @@ public class PlayerProfile implements Serializable {
     private static final long serialVersionUID = 3L;
     // Save path is now per-profile: saves/<name>.sav
     private static final String SAVE_DIR = "saves/";
+    
+    public record LeaderboardEntry(String name, int level, int xp, int coins) {}
 
     /** Returns file path for this profile */
     public String getSavePath() {
@@ -224,12 +226,27 @@ public class PlayerProfile implements Serializable {
         java.util.List<String> names = new java.util.ArrayList<>();
         java.io.File dir = new java.io.File(SAVE_DIR);
         if (!dir.exists()) return names;
-        for (java.io.File f : dir.listFiles()) {
+        java.io.File[] files = dir.listFiles();
+        if (files == null) return names;
+        for (java.io.File f : files) {
             if (f.getName().endsWith(".sav")) {
                 names.add(f.getName().replace(".sav", ""));
             }
         }
         return names;
+    }
+
+    public static List<LeaderboardEntry> getLeaderboard() {
+        List<LeaderboardEntry> list = new ArrayList<>();
+        for (String name : listProfiles()) {
+            try {
+                PlayerProfile p = load(name);
+                list.add(new LeaderboardEntry(p.playerName, p.level, p.totalXP, p.coins));
+            } catch (Exception ignored) {}
+        }
+        list.sort((a,b) -> b.xp() - a.xp());
+        if (list.size() > 5) return list.subList(0, 5);
+        return list;
     }
 
     /** Delete this profile's save file */

@@ -1,8 +1,9 @@
 package com.samarbhumi.ui;
 
 import com.samarbhumi.audio.AudioEngine;
-import com.samarbhumi.core.*;
-import com.samarbhumi.core.Enums.*;
+import com.samarbhumi.core.GameConstants;
+import com.samarbhumi.core.GameSession;
+import com.samarbhumi.core.InputState;
 import com.samarbhumi.entity.Player;
 import com.samarbhumi.map.GameMap;
 import com.samarbhumi.map.MapFactory;
@@ -147,6 +148,7 @@ public class GameWindow extends JFrame {
         pack();
         setSize(GameConstants.WIN_W, GameConstants.WIN_H);
         setLocationRelativeTo(null);
+        setExtendedState(JFrame.MAXIMIZED_BOTH); // Start in full screen
         setVisible(true);
         canvas.createBufferStrategy(2);
         recalcScale();
@@ -238,7 +240,13 @@ public class GameWindow extends JFrame {
         switch (state) {
             case PROFILE_SELECT -> profileSelect.update(dt);
             case MAIN_MENU  -> mainMenu.update(dt);
-            case LOBBY      -> lobby.update(dt);
+            case LOBBY      -> {
+                lobby.update(dt);
+                // Guest auto-start when host starts
+                if (lobby.getMode()==LobbyScreen.GameMode.ONLINE && com.samarbhumi.net.NetManager.inMatch && com.samarbhumi.net.NetManager.localPlayerIdx > 0) {
+                    startMatch();
+                }
+            }
             case PROFILE    -> profileSc.update(dt);
             case STORE      -> storeSc.update(dt);
             case SETTINGS   -> settingsSc.update(dt);
@@ -426,7 +434,11 @@ public class GameWindow extends JFrame {
             case LOBBY -> {
                 switch (lobby.handleClick(mx, my)) {
                     case START -> startMatch();
-                    case BACK  -> { state = AppState.MAIN_MENU; audio.playTheme(AudioEngine.THEME_MENU); }
+                    case BACK  -> { 
+                        state = AppState.MAIN_MENU; 
+                        audio.playTheme(AudioEngine.THEME_MENU); 
+                        com.samarbhumi.net.NetManager.disconnect();
+                    }
                     default -> {}
                 }
             }
@@ -440,14 +452,23 @@ public class GameWindow extends JFrame {
             case PAUSED -> {
                 switch (pauseSc.handleClick(mx,my)) {
                     case RESUME    -> state = AppState.PLAYING;
-                    case MAIN_MENU -> { state=AppState.MAIN_MENU; session=null; audio.playTheme(AudioEngine.THEME_MENU); }
+                    case MAIN_MENU -> { 
+                        state = AppState.MAIN_MENU; 
+                        session = null; 
+                        audio.playTheme(AudioEngine.THEME_MENU); 
+                        com.samarbhumi.net.NetManager.disconnect();
+                    }
                     default -> {}
                 }
             }
             case POST_MATCH -> {
                 switch (postMatch.handleClick(mx,my)) {
                     case PLAY_AGAIN -> { state=AppState.LOBBY; audio.playTheme(AudioEngine.THEME_BATTLE); }
-                    case MAIN_MENU  -> { state=AppState.MAIN_MENU; audio.playTheme(AudioEngine.THEME_MENU); }
+                    case MAIN_MENU  -> { 
+                        state = AppState.MAIN_MENU; 
+                        audio.playTheme(AudioEngine.THEME_MENU); 
+                        com.samarbhumi.net.NetManager.disconnect();
+                    }
                     default -> {}
                 }
             }
@@ -464,8 +485,12 @@ public class GameWindow extends JFrame {
         if (profile != null && !nameInput.isEmpty()) profile.setPlayerName(nameInput);
 
         GameMap map = MapFactory.create(lobby.getSelectedMap());
-        session     = new GameSession(map, profile, lobby.getNumBots(), lobby.getDifficulty(),
-                          lobby.isTwoPlayer(), lobby.isTeamMode());
+        if (lobby.getMode() == LobbyScreen.GameMode.ONLINE) {
+            session = new com.samarbhumi.net.NetworkSession(map, profile, lobby.isTeamMode());
+        } else {
+            session = new GameSession(map, profile, lobby.getNumBots(), lobby.getDifficulty(),
+                                     lobby.isTwoPlayer(), lobby.isTeamMode());
+        }
         gameScreen  = new GameScreen(session);
         state       = AppState.PLAYING;
         audio.playTheme(AudioEngine.THEME_BATTLE);

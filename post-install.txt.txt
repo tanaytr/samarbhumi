@@ -1,0 +1,25 @@
+Installation Complete!
+----------------------
+
+WHAT'S NEW IN v1.2 (Multiplayer Update):
+- ONLINE MULTIPLAYER: Create or join lobbies with 4-letter codes.
+- LOCKSTEP ENGINE: Smooth network play for up to 4 players.
+- STARRY LANDING: New premium background aesthetics.
+- PROXIMITY BGM: 8-bit theme music generated in real-time.
+- MAXIMIZED START: App opens in full-screen window by default.
+
+WHAT'S NEW IN v1.1:
+- Fixed App Icon (No more red rectangle!)
+- New "Guest Mode" - Browse menus freely without a profile.
+- Fixed Profile Switching - Sign out or switch without app crashes.
+- Corrected Team Leaderboards.
+
+CREDITS:
+- Lead Developer: Tanay Trivedi
+- Technical Collaborators: Priyansh Saxena, Srishti Jain
+- Animations & Documentation: Diksha Rathi
+
+Check for updates and source code at:
+https://github.com/tanaytr/samarbhumi
+
+War Never Ends. Enjoy the battlefield!

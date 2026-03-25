@@ -2,7 +2,6 @@ package com.samarbhumi.ui;
 
 import com.samarbhumi.core.GameConstants;
 import java.awt.*;
-import java.awt.geom.*;
 
 /**
  * Shared drawing utilities — modern dark UI with sharp typography,
@@ -15,7 +14,6 @@ public final class UIRenderer {
     public static final int H = GameConstants.WIN_H;
 
     // ── Accent palette ────────────────────────────────────────────────────
-    private static final Color BTN_HOVER_TINT = new Color(255,255,255,22);
     private static final Color PANEL_BG_TOP   = new Color(12, 18, 10, 248);
     private static final Color PANEL_BG_BOT   = new Color( 6, 10,  4, 252);
 
@@ -303,8 +301,6 @@ public final class UIRenderer {
             x += bw + gap;
         }
     }
-
-    private static void buildingPass(Graphics2D g, int x, int y, int w, int h) {}
 
 
     // ── Logo — cinematic gold title ───────────────────────────────────────

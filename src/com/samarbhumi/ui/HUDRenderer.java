@@ -502,11 +502,4 @@ public class HUDRenderer {
         g.setColor(new Color(255,255,255,28)); g.fillRoundRect(x+1,y+1,w-2,h/2,3,3);
         g.setColor(new Color(255,255,255,58)); g.drawRoundRect(x,y,w,h,4,4);
     }
-
-    private static void centerText(Graphics2D g, String s, int cx, int y) {
-        FontMetrics fm = g.getFontMetrics();
-        g.setColor(new Color(0,0,0,185));
-        g.drawString(s, cx - fm.stringWidth(s)/2 + 2, y + 2);
-        g.drawString(s, cx - fm.stringWidth(s)/2, y);
-    }
 }

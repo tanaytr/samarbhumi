@@ -17,6 +17,8 @@ import java.util.*;
  */
 public class GameSession {
 
+    public Enums.Difficulty getDifficulty() { return diff; }
+    
     private final GameMap          map;
     private final List<Player>     players    = new ArrayList<>();
     private final List<BotController> bots   = new ArrayList<>();
@@ -27,11 +29,14 @@ public class GameSession {
     private final LinkedList<FloatText>     floatTexts = new LinkedList<>();
 
     private float  matchTimer;
-    private boolean matchOver;
-    private Player winner;
-    private int    humanPlayerIdx;
+    public boolean matchOver;
+    public Player winner;
+    public int    humanPlayerIdx;
+    private final Enums.Difficulty diff;
     private final Random RNG = new Random();
     private float pickupSpawnTimer = 0f;
+
+    public boolean isOnlineMatch = false;
 
     // Explosion splash damage radius
     private static final float EXPLOSION_RADIUS = 120f;
@@ -52,7 +57,7 @@ public class GameSession {
     // killsToWin scales with enemy count — set after players list is built
     private int killsToWin = 3;
 
-    private void fireWeapon(Player shooter, com.samarbhumi.weapon.Weapon w) {
+    public void fireWeapon(Player shooter, com.samarbhumi.weapon.Weapon w) {
         if (w == null) return;
         Enums.WeaponType wt = w.getType();
         float angle = shooter.getAimAngle();
@@ -110,7 +115,7 @@ public class GameSession {
         }
     }
 
-    private void doMeleeHit(Player attacker) {
+    public void doMeleeHit(Player attacker) {
         float ax = attacker.cx(), ay = attacker.cy();
         for (Player p : players) {
             if (p==attacker || !p.isAlive()) continue;
@@ -138,6 +143,7 @@ public class GameSession {
     public GameSession(GameMap map, PlayerProfile profile, int numBots,
                        Enums.Difficulty diff, boolean twoPlayer, boolean teamMode) {
         this.map          = map;
+        this.diff         = diff;
         this.matchTimer   = GameConstants.MATCH_TIME_SEC;
         this.twoPlayerMode= twoPlayer;
         this.teamMode     = teamMode;
@@ -161,7 +167,7 @@ public class GameSession {
                 for (int i=0; i<numBots; i++) {
                     Vec2 sp = map.getSpawnRed(i % map.spawnRedCount());
                     Player bot = new Player(i+2, botNames[i%botNames.length], Enums.Team.RED, sp.x, sp.y, false);
-                    players.add(bot); bots.add(new BotController(bot, diff));
+                    players.add(bot); bots.add(new BotController(bot, this));
                 }
             } else {
                 // Personal / duel: P1=BLUE vs P2=RED, no bots
@@ -178,19 +184,19 @@ public class GameSession {
                 for (int i=0; i<blueAllies; i++) {
                     Vec2 sp = map.getSpawnBlue((i+1) % map.spawnBlueCount());
                     Player bot = new Player(idx++, botNames[i%botNames.length], Enums.Team.BLUE, sp.x, sp.y, false);
-                    players.add(bot); bots.add(new BotController(bot, diff));
+                    players.add(bot); bots.add(new BotController(bot, this));
                 }
                 for (int i=0; i<redEnemies; i++) {
                     Vec2 sp = map.getSpawnRed(i % map.spawnRedCount());
                     Player bot = new Player(idx++, botNames[(blueAllies+i)%botNames.length], Enums.Team.RED, sp.x, sp.y, false);
-                    players.add(bot); bots.add(new BotController(bot, diff));
+                    players.add(bot); bots.add(new BotController(bot, this));
                 }
             } else {
                 // Free-for-all: human=BLUE, ALL bots=RED (fixes melee/bullet team-skip bug)
                 for (int i=0; i<numBots; i++) {
                     Vec2 sp = map.getSpawnRed(i % map.spawnRedCount());
                     Player bot = new Player(i+1, botNames[i%botNames.length], Enums.Team.RED, sp.x, sp.y, false);
-                    players.add(bot); bots.add(new BotController(bot, diff));
+                    players.add(bot); bots.add(new BotController(bot, this));
                 }
             }
         }
@@ -236,13 +242,15 @@ public class GameSession {
         if (matchTimer <= 0) { matchTimer=0; endMatch(); return; }
 
         // Human input → Player 0
-        Player human = players.get(humanPlayerIdx);
-        if (human.isAlive()) applyHumanInput(human, dt, input);
+        if (!isOnlineMatch) {
+            Player human = players.get(humanPlayerIdx);
+            if (human.isAlive() && input != null) applyHumanInput(human, dt, input);
 
-        // P2 input if 2-player mode
-        if (twoPlayerMode && players.size() > 1) {
-            Player p2 = players.get(1);
-            if (p2.isAlive()) applyP2Input(p2, dt, input);
+            // P2 input if 2-player mode
+            if (twoPlayerMode && players.size() > 1 && input != null) {
+                Player p2 = players.get(1);
+                if (p2.isAlive()) applyP2Input(p2, dt, input);
+            }
         }
 
         // AI bots — update AI logic, then create projectile if they fired
@@ -320,8 +328,10 @@ public class GameSession {
                 proj.kill();
             }
 
-            // Jetpack particles for human
-            if (human.isAlive() && human.isJetpackActive()) spawnJetParticles(human);
+            // Jetpack particles for players
+            for (Player p : players) {
+                if (p.isAlive() && p.isJetpackActive()) spawnJetParticles(p);
+            }
         }
 
         // Integrate pickups
@@ -426,7 +436,7 @@ public class GameSession {
     }
 
     /** Throw a grenade from inventory (Shift/Ctrl key) */
-    private void throwGrenade(Player p) {
+    public void throwGrenade(Player p) {
         if (!p.useGrenade()) {
             addFloat("No grenades!", p.cx(), p.cy()-20, GameConstants.C_RED);
             return;
@@ -502,7 +512,7 @@ public class GameSession {
         particles.spawnJetTrail(p.cx(), p.getPos().y+p.getH(), jc1, jc2);
     }
 
-    private void tryPickup(Player p) {
+    public void tryPickup(Player p) {
         for (PickupItem item : pickups) {
             if (!item.isAlive()) continue;
             if (item.getBounds().overlaps(p.getBounds())) { collectPickup(p, item); break; }

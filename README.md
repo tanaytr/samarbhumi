@@ -1,5 +1,14 @@
 # SAMARBHUMI — War Never Ends
-### A Java 2D Side-Scrolling Multiplayer Shooter  `v1.1`
+### A Java 2D Side-Scrolling Multiplayer Shooter  `v1.2`
+
+---
+
+## What's New in v1.2 (The Multiplayer Update)
+- **Online Multiplayer** — Full relay-based lobby system with 4-letter invite codes.
+- **Lockstep Networking** — Deterministic synchronization for low-latency 2-4 player matches.
+- **Enhanced Landing Page** — New starry sky background and premium UI animations.
+- **Web Audio API BGM** — Real-time 8-bit theme music generated in-browser/in-app.
+- **Packaging Tools** — Built-in support for native Windows/Mac/Linux distribution.
 
 ---
 
@@ -146,6 +155,7 @@ com.samarbhumi
 ├── entity/       Player, PickupItem
 ├── weapon/       Weapon, Projectile (pooled), ParticleSystem (pooled)
 ├── ai/           BotController (state machine, LOS, leading)
+├── net/          NetManager, NetworkSession (Lockstep Sync, Lobby)
 ├── map/          GameMap (tile collision, LOS raycasting), MapFactory
 ├── progression/  PlayerProfile (XP, unlocks, save/load)
 ├── audio/        AudioEngine (MIDI BGM + procedural SFX)
@@ -163,17 +173,21 @@ com.samarbhumi
 - **MIDI audio** — 4 BGM themes + 9 procedural SFX, all generated at runtime
 - **BufferStrategy rendering** — triple-buffered active rendering at 60fps
 - **Fixed-timestep game loop** — decoupled update (16.67ms) from render
-- **State machine AI** — Patrol → Chase → Attack → Seek Health → Flee with LOS and target-leading
-- **Spatial culling** — only tiles in view frustum are drawn
+- **Lockstep networking** — Frame-buffered deterministic input synchronization
+- **Web Audio API** — Real-time 8-bit BGM synthesis
 - **Persistent save** — Java ObjectOutputStream serialization
 
 ---
 
 ## Known Limitations
 
-- Online multiplayer requires a networking layer not included in this build
-- Window is fixed 1280×720 (intentional for consistent rendering)
 - Requires JDK 17+ for record syntax (UnlockEntry, StoreItem)
+
+---
+
+## Branding & Distribution
+
+See `docs/BRANDING_AND_DISTRIBUTION.md` for detailed instructions on changing the application's logo, icons, and compiling packages for Windows, macOS, and Linux.
 
 ---
 

@@ -15,7 +15,6 @@ import java.util.*;
 public class BotController {
 
     private final Player     bot;
-    private final Difficulty diff;
     private boolean firedThisFrame = false;
     private AiState state = AiState.PATROL;
     private Player  target;
@@ -35,11 +34,10 @@ public class BotController {
     private final float AIM_ERROR;    // radians of aim spread
     private final float THINK_RATE;   // AI decision frequency
 
-    public BotController(Player bot, Difficulty diff) {
-        this.bot  = bot;
-        this.diff = diff;
+    public BotController(Player b, GameSession s) {
+        this.bot = b;
         // ALL difficulties shoot fast enough to be dangerous
-        switch (diff) {
+        switch (s.getDifficulty()) {
             case EASY   -> { REACT_TIME=0.35f; AIM_ERROR=0.28f; THINK_RATE=0.18f; }
             case MEDIUM -> { REACT_TIME=0.18f; AIM_ERROR=0.12f; THINK_RATE=0.12f; }
             default     -> { REACT_TIME=0.08f; AIM_ERROR=0.04f; THINK_RATE=0.07f; }

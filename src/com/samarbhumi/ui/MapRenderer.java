@@ -6,7 +6,6 @@ import com.samarbhumi.entity.PickupItem;
 import com.samarbhumi.map.GameMap;
 
 import java.awt.*;
-import java.awt.geom.*;
 import java.util.List;
 import java.util.Random;
 

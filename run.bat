@@ -5,7 +5,7 @@ color 0A
 echo.
 echo  ================================================
 echo   SAMARBHUMI - War Never Ends
-echo   Java 2D Action Shooter  v1.1
+echo   Java 2D Action Shooter  v1.2
 echo  ================================================
 echo.
 
@@ -127,6 +127,8 @@ echo  [1/3] Compiling...
   "%~dp0src\com\samarbhumi\ui\GameScreen.java" ^
   "%~dp0src\com\samarbhumi\ui\Screens.java" ^
   "%~dp0src\com\samarbhumi\ui\GameWindow.java" ^
+  "%~dp0src\com\samarbhumi\net\NetManager.java" ^
+  "%~dp0src\com\samarbhumi\net\NetworkSession.java" ^
   "%~dp0src\Main.java"
 
 if %ERRORLEVEL% NEQ 0 (

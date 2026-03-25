@@ -10,10 +10,11 @@ public class RelayServer {
 
     public static void main(String[] args) throws IOException {
         System.out.println("Samarbhumi Relay Server on port " + PORT);
-        ServerSocket ss = new ServerSocket(PORT);
-        while (true) {
-            Socket client = ss.accept();
-            new Thread(() -> handle(client)).start();
+        try (ServerSocket ss = new ServerSocket(PORT)) {
+            while (true) {
+                Socket client = ss.accept();
+                new Thread(() -> handle(client)).start();
+            }
         }
     }
 
@@ -35,7 +36,7 @@ public class RelayServer {
                     clientLobby.put(sock.toString(), code);
                     out.println("JOINED:" + code + ":" + lobby.size());
                     broadcast(code, "PLAYER_JOINED:" + lobby.size(), out);
-                } else if (line.startsWith("INPUT:")) {
+                } else if (line.startsWith("INPUT:") || line.startsWith("START:")) {
                     String code = clientLobby.get(sock.toString());
                     if (code != null) broadcast(code, line, out);
                 } else if (line.equals("PING")) {
