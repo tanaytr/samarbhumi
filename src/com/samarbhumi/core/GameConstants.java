@@ -60,8 +60,8 @@ public final class GameConstants {
     public static final int   MATCH_TIME_SEC    = 300; // 5 minutes
 
     // ── Online Multiplayer ──────────────────────────────────────────────────
-    public static final String NET_HOST = "samarbhumi-production.up.railway.app";
-    public static final int    NET_PORT = 7777;
+    public static final String NET_HOST = "crossover.proxy.rlwy.net";
+    public static final int    NET_PORT = 50588;
 
     // ── UI Colours (Mini Militia style — dark military green+orange theme) ─
     public static final Color C_BG          = new Color(  8,  12,   6);
