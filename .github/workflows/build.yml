@@ -5,10 +5,16 @@ on:
     tags:
       - 'v*'
 
+permissions:
+  contents: write
+
 jobs:
   build:
     name: Build Multi-Platform Binaries
     runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
     strategy:
       matrix:
         os: [windows-latest, ubuntu-latest, macos-latest]
@@ -24,7 +30,6 @@ jobs:
           distribution: 'temurin'
 
       - name: Compile Game
-        shell: bash
         run: |
           mkdir -p bin
           find src -name "*.java" > sources.txt
@@ -42,17 +47,17 @@ jobs:
       - name: Packaging (Windows - Full Setup Installer)
         if: matrix.os == 'windows-latest'
         run: |
-          jpackage --type exe --name "Samarbhumi-Setup" --input . --main-jar Samarbhumi.jar --main-class Main --win-shortcut --win-menu --win-dir-chooser --license-file INSTALLER_INFO.txt --app-version 1.2 --vendor "Samarbhumi" --description "A fast-paced 2D action shooter — War Never Ends"
+          jpackage --type exe --name "Samarbhumi-Setup" --input . --main-jar Samarbhumi.jar --main-class Main --win-shortcut --win-menu --win-dir-chooser --license-file INSTALLER_INFO.txt --app-version 1.2 --vendor "Samarbhumi" --description "A fast-paced 2D action shooter — War Never Ends" --verbose
 
       - name: Packaging (macOS - App Bundle & Disk Image)
         if: matrix.os == 'macos-latest'
         run: |
-          jpackage --type dmg --name "Samarbhumi" --input . --main-jar Samarbhumi.jar --main-class Main --license-file INSTALLER_INFO.txt --app-version 1.2 --vendor "Samarbhumi" --mac-package-name "Samarbhumi"
+          jpackage --type dmg --name "Samarbhumi" --input . --main-jar Samarbhumi.jar --main-class Main --license-file INSTALLER_INFO.txt --app-version 1.2 --vendor "Samarbhumi" --mac-package-name "Samarbhumi" --verbose
 
-      - name: Packaging (Linux)
+      - name: Packaging (Linux - Debian Package)
         if: matrix.os == 'ubuntu-latest'
         run: |
-          jpackage --type deb --name "samarbhumi" --input . --main-jar Samarbhumi.jar --main-class Main --license-file INSTALLER_INFO.txt --app-version 1.2 --vendor "Samarbhumi" --linux-shortcut --description "A fast-paced 2D action shooter — War Never Ends"
+          jpackage --type deb --name "samarbhumi" --input . --main-jar Samarbhumi.jar --main-class Main --license-file INSTALLER_INFO.txt --app-version 1.2 --vendor "Samarbhumi" --linux-shortcut --description "A fast-paced 2D action shooter — War Never Ends" --verbose
 
       - name: Create Release and Upload
         uses: softprops/action-gh-release@v2
