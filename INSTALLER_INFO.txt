@@ -1,0 +1,76 @@
+SAMARBHUMI — War Never Ends (v1.2 Multiplayer Update)
+==================================================
+
+1. PRE-INSTALLATION INFORMATION
+-------------------------------
+SYSTEM REQUIREMENTS:
+- OS: Windows 10/11, macOS, or Linux (64-bit)
+- Java: JDK 17 or later (The installer will bundle this)
+- Network: Stable internet connection (required for Online Multiplayer)
+- Display: 1280x720 recommended
+
+PLAYER 1 CONTROLS:
+- Move: A / D
+- Jump: W (Double-tap for Double Jump)
+- Crouch: S
+- Jetpack: E (Hold)
+- Fire: Left Mouse Button (Mouse Aim)
+- Melee: Q
+- Reload: R
+- Swap Weapon: Tab
+
+PLAYER 2 CONTROLS:
+- Move: Arrow Keys (Left/Right)
+- Jump: Up Arrow (Double-tap for Double Jump)
+- Crouch: Down Arrow
+- Jetpack: Numpad 8
+- Fire: Numpad 0
+- Melee: Numpad 5
+- Reload: Numpad 5
+
+Press ESC during gameplay to Pause.
+
+--------------------------------------------------
+
+2. MIT LICENSE
+--------------
+Copyright (c) 2026 Tanay Trivedi
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+--------------------------------------------------
+
+3. POST-INSTALLATION & CREDITS
+------------------------------
+WHAT'S NEW IN v1.2 (Multiplayer Update):
+- ONLINE MULTIPLAYER: Create or join lobbies with 4-letter codes.
+- LOCKSTEP ENGINE: Smooth network play for up to 4 players.
+- STARRY LANDING: New premium background aesthetics.
+- PROXIMITY BGM: 8-bit theme music generated in real-time.
+- MAXIMIZED START: App opens in full-screen window by default.
+
+CREDITS:
+- Lead Developer: Tanay Trivedi
+- Technical Collaborators: Priyansh Saxena, Srishti Jain
+- Animations & Documentation: Diksha Rathi
+
+Check for updates and source code at:
+https://github.com/tanaytr/samarbhumi
+
+War Never Ends. Enjoy the battlefield!

@@ -143,6 +143,7 @@ if %ERRORLEVEL% NEQ 0 (
 echo  [2/3] Copying resources...
 if exist "%~dp0resources\fonts\GameFont-Bold.ttf"    copy /Y "%~dp0resources\fonts\GameFont-Bold.ttf"    "%~dp0bin\" >nul
 if exist "%~dp0resources\fonts\GameFont-Regular.ttf" copy /Y "%~dp0resources\fonts\GameFont-Regular.ttf" "%~dp0bin\" >nul
+if exist "%~dp0resources\app_logo.png"               copy /Y "%~dp0resources\app_logo.png"               "%~dp0bin\" >nul
 
 :: ── Step 4: Launch ───────────────────────────────────────────────────────
 echo  [3/3] Launching Samarbhumi...

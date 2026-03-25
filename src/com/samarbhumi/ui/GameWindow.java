@@ -84,7 +84,16 @@ public class GameWindow extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(true);
         setMinimumSize(new Dimension(800, 500));
-        setIconImage(buildAppIcon());
+        try {
+            java.net.URL imgURL = GameWindow.class.getResource("/app_logo.png");
+            if (imgURL != null) {
+                setIconImage(new ImageIcon(imgURL).getImage());
+            } else {
+                setIconImage(buildAppIcon()); // Fallback
+            }
+        } catch (Exception e) {
+            setIconImage(buildAppIcon());
+        }
 
         canvas = new Canvas();
         canvas.setBackground(Color.BLACK);
