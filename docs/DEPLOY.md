@@ -84,20 +84,20 @@ Follow these exact 5 steps to get your **Full Installers**:
 2.  **Trigger the Magic Build (The Tag)**:
     Run these two commands. The tag is what "wakes up" the Mac/Linux build servers:
     ```bash
-    git tag v1.2
-    git push rocket v1.2
+    git tag v1.2.1
+    git push rocket v1.2.1
     ```
 3.  **Watch the Build**:
     Go to your GitHub repo on your browser. Click the **"Actions"** tab at the top. You will see a workflow named **"Build and Release"** starting. Wait ~5 minutes until all three green checkmarks appear.
 4.  **Grab the Files**:
     Click on the successful run -> scroll down. You will see these files under **"Artifacts"**:
-    - **Windows**: `Samarbhumi-Setup.exe` (**Full Setup Installer**)
-  - **macOS**: `Samarbhumi.dmg` (**Disk Image with .app bundle**)
-  - **Linux**: `samarbhumi_1.2_amd64.deb` (**Debian/Ubuntu Package**)
+    - **Windows**: `Samarbhumi-1.2.1.exe` (**Full Setup Installer**)
+  - **macOS**: `Samarbhumi-1.2.1.dmg` (**Disk Image with .app bundle**)
+  - **Linux**: `samarbhumi_1.2.1_amd64.deb` (**Debian/Ubuntu Package**)
   - **All**: `Samarbhumi.jar` (Cross-platform JAR)
     Download these to your Windows computer and unzip them.
 5.  **Create the Release**:
-    Go to **Releases** on GitHub -> **Draft a new release** -> Select tag `v1.2` -> Drag and drop these files (and your local Windows EXE) into the release assets.
+    go to **Releases** on GitHub -> **Draft a new release** -> Select tag `v1.2.1` -> Drag and drop these files (and your local Windows EXE) into the release assets.
 
 ---
 
@@ -106,9 +106,9 @@ To make your download buttons work, you must link them to the **Latest Release**
 
 In `index.html`, use these exact link patterns (replace `YOUR_USERNAME`):
 
-- **Windows**: `https://github.com/YOUR_USERNAME/samarbhumi/releases/latest/download/Samarbhumi-Setup.exe`
-- **macOS**: `https://github.com/YOUR_USERNAME/samarbhumi/releases/latest/download/Samarbhumi.dmg`
-- **Linux**: `https://github.com/YOUR_USERNAME/samarbhumi/releases/latest/download/samarbhumi_1.2_amd64.deb`
+- **Windows**: `https://github.com/YOUR_USERNAME/samarbhumi/releases/latest/download/Samarbhumi-1.2.1.exe`
+- **macOS**: `https://github.com/YOUR_USERNAME/samarbhumi/releases/latest/download/Samarbhumi-1.2.1.dmg`
+- **Linux**: `https://github.com/YOUR_USERNAME/samarbhumi/releases/latest/download/samarbhumi_1.2.1_amd64.deb`
 - **JAR**: `https://github.com/YOUR_USERNAME/samarbhumi/releases/latest/download/Samarbhumi.jar`
 
 ---
@@ -122,4 +122,4 @@ In `index.html`, use these exact link patterns (replace `YOUR_USERNAME`):
 | Linux    | `.deb`      | jpackage   | `fab fa-linux`   |
 | Universal| `.jar`      | javac/jar  | `fab fa-java`    |
 
-*Master Guide v1.2 finalized for production distribution.*
+*Master Guide v1.2.1 finalized for production distribution.*

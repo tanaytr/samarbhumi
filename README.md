@@ -1,5 +1,13 @@
 # SAMARBHUMI — War Never Ends
-### A Java 2D Side-Scrolling Multiplayer Shooter  `v1.2`
+### A Java 2D Side-Scrolling Multiplayer Shooter  `v1.2.1`
+
+---
+
+## What's New in v1.2.1 (Compatibility Update)
+- **Broader OS Support** — Now compiles on older macOS (Intel/macOS 12+) and Linux (Ubuntu 20.04+) versions via updated GitHub Actions runners.
+- **Improved Distribution** — Installers correctly show \"Shunya Labs\" as publisher and feature the green custom icon.
+- **Fixed Installer Naming** — Windows installer correctly named \"Samarbhumi-1.2.1.exe\".
+- **UI Fixes** — Fixed the CREATE button overlap in the profile selection screen.
 
 ---
 
@@ -190,5 +198,4 @@ com.samarbhumi
 See `docs/BRANDING_AND_DISTRIBUTION.md` for detailed instructions on changing the application's logo, icons, and compiling packages for Windows, macOS, and Linux.
 
 ---
-
-*Samarbhumi — Built with pure Java. No external libraries. No sprites. No compromises.*
+*Samarbhumi — Built with pure Java. No external libraries. No sprites. No compromises. | v1.2.1*

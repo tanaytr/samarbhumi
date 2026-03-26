@@ -5,7 +5,11 @@
 
 ## Changelog
 
-### v1.2 (current)
+### v1.2.1 (current)
+- **Compatibility Update** — Broadened GitHub Actions support to compile on older Linux (Ubuntu 20.04) and macOS (macOS 13) versions.
+- **Distribution Fixes** — Verified Publisher name and fixed Windows installer app name to `Samarbhumi-1.2.1.exe`.
+
+### v1.2
 - **Online Multiplayer** — Full implementation of relay-based networking with 4-letter lobby codes.
 - **Starry Landing Page** — Added dynamic starry sky and improved UI aesthetics.
 - **8-bit BGM** — Integrated procedural background music using Web Audio API.
@@ -240,4 +244,4 @@ Samarbhumi/
 
 ---
 
-*Built with Java 17+ | Swing + Java2D | ~6,500 lines of code | v1.2*
+*Built with Java 17+ | Swing + Java2D | ~6,500 lines of code | v1.2.1*

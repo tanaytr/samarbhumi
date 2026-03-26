@@ -1244,16 +1244,16 @@ class SwitchProfileOverlay {
         g.setFont(GameConstants.F_SUBHEAD); g.setColor(GameConstants.C_GOLD);
         g.drawString("CREATE & SWITCH", lx, createY);
         createY += 6;
-        int nbw = pw-180, nbh = 34;
+        int nbw = pw-210, nbh = 34;
         g.setColor(editingNew ? new Color(30,65,15,230) : new Color(12,24,6,200));
         g.fillRoundRect(lx, createY, nbw, nbh, 8,8);
         g.setColor(editingNew ? GameConstants.C_ACCENT : new Color(50,85,22,150));
         g.setStroke(new BasicStroke(editingNew ? 2f : 1f));
         g.drawRoundRect(lx, createY, nbw, nbh, 8,8);
         g.setFont(GameConstants.F_HUD); g.setColor(GameConstants.C_WHITE);
-        String disp = editingNew ? newNameInput+(((int)(time*2))%2==0?"|":"") : (newNameInput.isEmpty()?"Click to type name…":newNameInput);
+        String disp = editingNew ? newNameInput+(((int)(time*2))%2==0?"|":"") : (newNameInput.isEmpty()?"Click to type name..":newNameInput);
         g.drawString(disp, lx+10, createY+23);
-        UIRenderer.button(g, "CREATE", lx+nbw+8, createY, 90, nbh, mx, my, false, new Color(35,95,14));
+        UIRenderer.button(g, "CREATE", lx+nbw+10, createY, 100, nbh, mx, my, false, new Color(35,95,14));
 
         if (feedbackTimer > 0) {
             g.setFont(GameConstants.F_BODY);
@@ -1295,9 +1295,9 @@ class SwitchProfileOverlay {
         }
 
         int createY = listY + Math.max(profiles.size(),1)*44 + 24;
-        int nbw = pw-180, nbh = 34;
+        int nbw = pw-210, nbh = 34;
         if (new java.awt.Rectangle(lx, createY, nbw, nbh).contains(mx,my)) { editingNew=true; return Action.NONE; }
-        if (new java.awt.Rectangle(lx+nbw+8, createY, 90, nbh).contains(mx,my)) {
+        if (new java.awt.Rectangle(lx+nbw+10, createY, 100, nbh).contains(mx,my)) {
             if (newNameInput.trim().isEmpty()) { feedbackMsg="Error: enter a name first."; feedbackTimer=2f; }
             else { pendingSwitch=newNameInput.trim(); newNameInput=""; editingNew=false; return Action.SWITCHED; }
             return Action.NONE;

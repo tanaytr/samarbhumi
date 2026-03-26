@@ -1,7 +1,7 @@
 #!/bin/bash
 echo "================================================"
 echo " SAMARBHUMI ANTIM - War Never Ends"
-echo " Java 2D Action Shooter  v1.2"
+echo " Java 2D Action Shooter  v1.2.1"
 echo "================================================"
 echo ""
 
