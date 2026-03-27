@@ -54,6 +54,12 @@ jobs:
             --app-version 1.2.1 \
             --vendor "Shunya Labs" \
             --verbose
+          jpackage --type msi --name "Samarbhumi" --input . --main-jar Samarbhumi.jar --main-class Main \
+            --icon resources/app_logo.ico \
+            --win-shortcut --win-menu --win-dir-chooser \
+            --app-version 1.2.1 \
+            --vendor "Shunya Labs" \
+            --verbose
 
       - name: Packaging (macOS - App Bundle & Disk Image)
         if: matrix.os == 'macos-latest'
