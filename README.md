@@ -192,10 +192,4 @@ com.samarbhumi
 - Requires JDK 17+ for record syntax (UnlockEntry, StoreItem)
 
 ---
-
-## Branding & Distribution
-
-See `docs/BRANDING_AND_DISTRIBUTION.md` for detailed instructions on changing the application's logo, icons, and compiling packages for Windows, macOS, and Linux.
-
----
 *Samarbhumi — Built with pure Java. No external libraries. No sprites. No compromises. | v1.2.1*
