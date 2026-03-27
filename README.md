@@ -4,10 +4,9 @@
 ---
 
 ## What's New in v1.2.1 (The Compatibility Update)
-- **Maximum Linux Support:** Migrated the build system to `ubuntu-22.04` to ensure the `.deb` package flawlessly supports a vastly wider range of older and newer Linux distributions.
-- **macOS Apple Silicon Support:** macOS bundles now natively build for Apple Silicon (M1/M2/M3/M4) while retaining full compatibility with older Intel Macs. 
-- **Verified Distribution & Branding:** Windows Setup Installers now correctly identify the publisher as **"Shunya Labs"** in Add/Remove Programs. The build pipeline dynamically converts the app logo into native `.ico` (Windows) and `.icns` (macOS) formats so the game icon appears perfectly on desktop shortcuts and installers. (Note: UAC unknown publisher warnings natively require EV certs to completely bypass on Windows).
-- **Flawless Multiplayer Hosting:** Added explicit Railway build configuration (`railway.json`) to guarantee the relay server launches perfectly for ultra-low latency combat.
+- **Maximum Linux & macOS Support:** Greatly expanded OS compatibility so the game now natively runs on Apple Silicon (M1+) hardware and older Linux distributions.
+- **Verified Distribution:** Windows Installers are now formally published by **"Shunya Labs"**, and the game's crosshair logo is perfectly integrated onto all desktop shortcuts.
+- **Flawless Multiplayer Hosting:** Backend improvements to guarantee ultra-low latency combat servers launch without a hitch.
 - **UI Fixes:** Perfected the layout constraints of the "CREATE" button in both profile screens to eliminate visual overlap.
 
 ---

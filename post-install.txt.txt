@@ -1,10 +1,11 @@
 Installation Complete!
 ----------------------
 
-WHAT'S NEW IN v1.2.1 (Compatibility & Refine Update):
-- PROPER DESKTOP ICONS: Windows and Mac now generate flawless .ico/.icns resources for shortcuts via ImageMagick in the build pipeline.
-- verified Publisher: Setup displays "Shunya Labs" in standard Windows properties. 
-- UI UX FIXES: The annoying CREATE button overlap in the profile menu is completely gone.
+WHAT'S NEW IN v1.2.1:
+- PROPER DESKTOP ICONS: Windows and Mac installers now feature the high-quality game logo.
+- VERIFIED PUBLISHER: Windows setup proudly displays "Shunya Labs" as the developer.
+- UI FIXES: Fixed text overlap issues with the CREATE button in the profile menus. 
+- EXPANDED OS SUPPORT: Native Apple Silicon (M1+) support and wider Linux compatibility.
 
 WHAT'S NEW IN v1.2 (Multiplayer Update):
 - ONLINE MULTIPLAYER: Create or join lobbies with 4-letter codes.

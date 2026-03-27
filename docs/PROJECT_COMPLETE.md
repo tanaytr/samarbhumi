@@ -6,10 +6,9 @@
 ## Changelog
 
 ### v1.2.1 (current)
-- **Maximum Linux Support:** Migrated the build system to `ubuntu-22.04` to ensure the `.deb` package flawlessly supports a vastly wider range of older and newer Linux distributions.
-- **macOS Apple Silicon Support:** macOS bundles now natively build for Apple Silicon (M1/M2/M3/M4) while retaining full compatibility with older Intel Macs. 
-- **Verified Distribution & Branding:** The pipeline now auto-generates `.ico` and `.icns` to ensure perfect icon display on desktop shortcuts, and publisher information is formally registered to "Shunya Labs" (SmartScreen UAC may still require an EV signature).
-- **Flawless Multiplayer Hosting:** Added explicit Railway build configuration (`railway.json`) to guarantee the relay server launches perfectly for ultra-low latency combat.
+- **Maximum Linux & macOS Support:** Greatly expanded OS compatibility so the game natively runs on Apple Silicon hardware and older Linux distros.
+- **Verified Distribution:** Windows Installers formally published by "Shunya Labs", and native desktop icons perfectly integrated on all systems.
+- **Flawless Multiplayer Hosting:** Backend architecture improvements to guarantee ultra-low latency combat servers launch perfectly.
 - **UI Adjustments:** Resolved CREATE button overlap issues in the Switch/New Profile menus.
 
 ### v1.2

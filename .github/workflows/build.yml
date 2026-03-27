@@ -51,10 +51,8 @@ jobs:
           jpackage --type exe --name "Samarbhumi" --input . --main-jar Samarbhumi.jar --main-class Main \
             --icon resources/app_logo.ico \
             --win-shortcut --win-menu --win-dir-chooser \
-            --license-file INSTALLER_INFO.txt \
             --app-version 1.2.1 \
             --vendor "Shunya Labs" \
-            --description "A fast-paced 2D action shooter - War Never Ends" \
             --verbose
 
       - name: Packaging (macOS - App Bundle & Disk Image)
