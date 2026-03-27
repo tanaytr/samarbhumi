@@ -1,5 +1,9 @@
-SAMARBHUMI — War Never Ends (v1.2 Multiplayer Update)
+SAMARBHUMI — War Never Ends (v1.2.1 Distribution Update)
 ----------------------------------
+
+WELCOME TO SAMARBHUMI 
+
+This release fixes desktop shortcuts, UI button overlaps, and includes the massive v1.2 multiplayer engine overhaul.
 
 SYSTEM REQUIREMENTS:
 - OS: Windows 10/11 (64-bit)

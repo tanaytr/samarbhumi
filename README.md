@@ -3,11 +3,12 @@
 
 ---
 
-## What's New in v1.2.1 (Compatibility Update)
-- **Broader OS Support** — Now compiles on older macOS (Intel/macOS 12+) and Linux (Ubuntu 20.04+) versions via updated GitHub Actions runners.
-- **Improved Distribution** — Installers correctly show \"Shunya Labs\" as publisher and feature the green custom icon.
-- **Fixed Installer Naming** — Windows installer correctly named \"Samarbhumi-1.2.1.exe\".
-- **UI Fixes** — Fixed the CREATE button overlap in the profile selection screen.
+## What's New in v1.2.1 (The Compatibility Update)
+- **Maximum Linux Support:** Migrated the build system to `ubuntu-22.04` to ensure the `.deb` package flawlessly supports a vastly wider range of older and newer Linux distributions.
+- **macOS Apple Silicon Support:** macOS bundles now natively build for Apple Silicon (M1/M2/M3/M4) while retaining full compatibility with older Intel Macs. 
+- **Verified Distribution & Branding:** Windows Setup Installers now correctly identify the publisher as **"Shunya Labs"** in Add/Remove Programs. The build pipeline dynamically converts the app logo into native `.ico` (Windows) and `.icns` (macOS) formats so the game icon appears perfectly on desktop shortcuts and installers. (Note: UAC unknown publisher warnings natively require EV certs to completely bypass on Windows).
+- **Flawless Multiplayer Hosting:** Added explicit Railway build configuration (`railway.json`) to guarantee the relay server launches perfectly for ultra-low latency combat.
+- **UI Fixes:** Perfected the layout constraints of the "CREATE" button in both profile screens to eliminate visual overlap.
 
 ---
 

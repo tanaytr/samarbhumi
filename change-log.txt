@@ -44,6 +44,9 @@
 - [BotController.java] - Refactored constructor for GameSession dependency.
 - [RelayServer.java] - Fixed ServerSocket resource leak.
 - [Build Scripts] - Updated run.bat and run.sh to include new 'net' package.
+- [GitHub Actions] - Build system upgraded (v1.2.1) to use imagemagick for native .ico/.icns asset generation so icons appear on all OS shortcuts.
+- [GitHub Actions] - Vendor explicitly set to "Shunya Labs" for MSI/Add-Remove programs attribution.
+- [Screens.java] - Widened CREATE button bounds to prevent text overlap in profile selection overlays.
 
 ==================================================
   Session Complete - Multiplayer Ready for Launch

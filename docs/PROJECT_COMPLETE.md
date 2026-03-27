@@ -6,8 +6,11 @@
 ## Changelog
 
 ### v1.2.1 (current)
-- **Compatibility Update** — Broadened GitHub Actions support to compile on older Linux (Ubuntu 20.04) and macOS (macOS 13) versions.
-- **Distribution Fixes** — Verified Publisher name and fixed Windows installer app name to `Samarbhumi-1.2.1.exe`.
+- **Maximum Linux Support:** Migrated the build system to `ubuntu-22.04` to ensure the `.deb` package flawlessly supports a vastly wider range of older and newer Linux distributions.
+- **macOS Apple Silicon Support:** macOS bundles now natively build for Apple Silicon (M1/M2/M3/M4) while retaining full compatibility with older Intel Macs. 
+- **Verified Distribution & Branding:** The pipeline now auto-generates `.ico` and `.icns` to ensure perfect icon display on desktop shortcuts, and publisher information is formally registered to "Shunya Labs" (SmartScreen UAC may still require an EV signature).
+- **Flawless Multiplayer Hosting:** Added explicit Railway build configuration (`railway.json`) to guarantee the relay server launches perfectly for ultra-low latency combat.
+- **UI Adjustments:** Resolved CREATE button overlap issues in the Switch/New Profile menus.
 
 ### v1.2
 - **Online Multiplayer** — Full implementation of relay-based networking with 4-letter lobby codes.

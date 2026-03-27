@@ -1244,7 +1244,7 @@ class SwitchProfileOverlay {
         g.setFont(GameConstants.F_SUBHEAD); g.setColor(GameConstants.C_GOLD);
         g.drawString("CREATE & SWITCH", lx, createY);
         createY += 6;
-        int nbw = pw-210, nbh = 34;
+        int nbw = pw-240, nbh = 38;
         g.setColor(editingNew ? new Color(30,65,15,230) : new Color(12,24,6,200));
         g.fillRoundRect(lx, createY, nbw, nbh, 8,8);
         g.setColor(editingNew ? GameConstants.C_ACCENT : new Color(50,85,22,150));
@@ -1252,8 +1252,8 @@ class SwitchProfileOverlay {
         g.drawRoundRect(lx, createY, nbw, nbh, 8,8);
         g.setFont(GameConstants.F_HUD); g.setColor(GameConstants.C_WHITE);
         String disp = editingNew ? newNameInput+(((int)(time*2))%2==0?"|":"") : (newNameInput.isEmpty()?"Click to type name..":newNameInput);
-        g.drawString(disp, lx+10, createY+23);
-        UIRenderer.button(g, "CREATE", lx+nbw+10, createY, 100, nbh, mx, my, false, new Color(35,95,14));
+        g.drawString(disp, lx+10, createY+24);
+        UIRenderer.button(g, "CREATE", lx+nbw+10, createY, 130, nbh, mx, my, false, new Color(35,95,14));
 
         if (feedbackTimer > 0) {
             g.setFont(GameConstants.F_BODY);
@@ -1295,9 +1295,9 @@ class SwitchProfileOverlay {
         }
 
         int createY = listY + Math.max(profiles.size(),1)*44 + 24;
-        int nbw = pw-210, nbh = 34;
+        int nbw = pw-240, nbh = 38;
         if (new java.awt.Rectangle(lx, createY, nbw, nbh).contains(mx,my)) { editingNew=true; return Action.NONE; }
-        if (new java.awt.Rectangle(lx+nbw+10, createY, 100, nbh).contains(mx,my)) {
+        if (new java.awt.Rectangle(lx+nbw+10, createY, 130, nbh).contains(mx,my)) {
             if (newNameInput.trim().isEmpty()) { feedbackMsg="Error: enter a name first."; feedbackTimer=2f; }
             else { pendingSwitch=newNameInput.trim(); newNameInput=""; editingNew=false; return Action.SWITCHED; }
             return Action.NONE;
@@ -1398,7 +1398,7 @@ class ProfileSelectScreen {
         createY += 8;
 
         // Name input box
-        int nbx = lx, nbw = 340, nbh = 36;
+        int nbx = lx, nbw = 320, nbh = 36;
         g.setColor(editingNew ? new Color(30,65,15,230) : new Color(12,24,6,200));
         g.fillRoundRect(nbx, createY, nbw, nbh, 8, 8);
         g.setColor(editingNew ? GameConstants.C_ACCENT : new Color(50,85,22,150));
@@ -1407,7 +1407,7 @@ class ProfileSelectScreen {
         g.setFont(GameConstants.F_HUD); g.setColor(GameConstants.C_WHITE);
         String disp = editingNew ? newNameInput+(((int)(time*2))%2==0?"|":"") : (newNameInput.isEmpty()?"Click to enter name...":newNameInput);
         g.drawString(disp, nbx+10, createY+24);
-        UIRenderer.button(g, "CREATE", nbx+nbw+10, createY, 110, nbh, mx, my, false, new Color(35,95,14));
+        UIRenderer.button(g, "CREATE", nbx+nbw+10, createY, 130, nbh, mx, my, false, new Color(35,95,14));
 
         // Feedback message
         if (feedbackTimer > 0) {
@@ -1444,14 +1444,14 @@ class ProfileSelectScreen {
         }
 
         int createY = listY + Math.max(profiles.size(),1)*44 + 32;
-        int nbx = lx, nbw = 340, nbh = 36;
+        int nbx = lx, nbw = 320, nbh = 36;
 
         // Name input box
         if (new java.awt.Rectangle(nbx, createY, nbw, nbh).contains(mx,my)) {
             editingNew = true; return Action.NONE;
         }
         // Create button
-        if (new java.awt.Rectangle(nbx+nbw+10, createY, 110, nbh).contains(mx,my)) {
+        if (new java.awt.Rectangle(nbx+nbw+10, createY, 130, nbh).contains(mx,my)) {
             if (newNameInput.trim().isEmpty()) {
                 feedbackMsg = "Error: Enter a name first."; feedbackTimer = 2f;
             } else {
