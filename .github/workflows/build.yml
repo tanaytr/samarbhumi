@@ -44,15 +44,10 @@ jobs:
           jar cfm ../Samarbhumi.jar manifest.txt .
           cd ..
 
-      - name: Generate OS-specific Icons
-        run: |
-          sudo apt-get update && sudo apt-get install -y imagemagick icnsutils
-          magick resources/app_logo.png -define icon:auto-resize=256,128,64,48,32,16 resources/app_logo.ico
-          png2icns resources/app_logo.icns resources/app_logo.png
-
       - name: Packaging (Windows - Full Setup Installer)
         if: matrix.os == 'windows-latest'
         run: |
+          magick resources/app_logo.png -define icon:auto-resize=256,128,64,48,32,16 resources/app_logo.ico
           jpackage --type exe --name "Samarbhumi" --input . --main-jar Samarbhumi.jar --main-class Main \
             --icon resources/app_logo.ico \
             --win-shortcut --win-menu --win-dir-chooser \
@@ -65,6 +60,17 @@ jobs:
       - name: Packaging (macOS - App Bundle & Disk Image)
         if: matrix.os == 'macos-latest'
         run: |
+          mkdir MyIcon.iconset
+          sips -z 16 16     resources/app_logo.png --out MyIcon.iconset/icon_16x16.png
+          sips -z 32 32     resources/app_logo.png --out MyIcon.iconset/icon_16x16@2x.png
+          sips -z 32 32     resources/app_logo.png --out MyIcon.iconset/icon_32x32.png
+          sips -z 64 64     resources/app_logo.png --out MyIcon.iconset/icon_32x32@2x.png
+          sips -z 128 128   resources/app_logo.png --out MyIcon.iconset/icon_128x128.png
+          sips -z 256 256   resources/app_logo.png --out MyIcon.iconset/icon_128x128@2x.png
+          sips -z 256 256   resources/app_logo.png --out MyIcon.iconset/icon_256x256.png
+          sips -z 512 512   resources/app_logo.png --out MyIcon.iconset/icon_256x256@2x.png
+          sips -z 512 512   resources/app_logo.png --out MyIcon.iconset/icon_512x512.png
+          iconutil -c icns MyIcon.iconset -o resources/app_logo.icns
           jpackage --type dmg --name "Samarbhumi" --input . --main-jar Samarbhumi.jar --main-class Main \
             --icon resources/app_logo.icns \
             --license-file INSTALLER_INFO.txt \
