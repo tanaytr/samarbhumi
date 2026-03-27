@@ -17,7 +17,7 @@ jobs:
         shell: bash
     strategy:
       matrix:
-        os: [windows-latest, ubuntu-20.04, macos-latest]
+        os: [windows-latest, ubuntu-22.04, macos-latest]
 
     steps:
       - name: Checkout Code
@@ -68,7 +68,7 @@ jobs:
             --verbose
 
       - name: Packaging (Linux - Debian Package)
-        if: matrix.os == 'ubuntu-20.04'
+        if: matrix.os == 'ubuntu-22.04'
         run: |
           jpackage --type deb --name "samarbhumi" --input . --main-jar Samarbhumi.jar --main-class Main \
             --icon resources/app_logo.png \
