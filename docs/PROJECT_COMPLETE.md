@@ -9,7 +9,8 @@
 - **Maximum Linux & macOS Support:** Greatly expanded OS compatibility so the game natively runs on Apple Silicon hardware and older Linux distros.
 - **Verified Distribution:** Windows Installers formally published by "Shunya Labs", and native desktop icons perfectly integrated on all systems.
 - **Flawless Multiplayer Hosting:** Backend architecture improvements to guarantee ultra-low latency combat servers launch perfectly.
-- **UI Adjustments:** Resolved CREATE button overlap issues in the Switch/New Profile menus.
+- **UI Adjustments:** Resolved button overlap issues in the Profile and Online Team menus.
+- **Linux Compatibility:** Removed forced OpenGL properties to ensure a stable launch on all Linux distributions (fixing the black screen issue).
 
 ### v1.2
 - **Online Multiplayer** — Full implementation of relay-based networking with 4-letter lobby codes.

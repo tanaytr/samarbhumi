@@ -462,7 +462,7 @@ class LobbyScreen {
 
         // Team mode options for online
         if (teamMode) {
-            cy += 18;
+            cy += 48;
             g.setFont(GameConstants.F_HUD); g.setColor(GameConstants.C_GOLD);
             g.drawString("TEAM MODE:", L+20, cy+14);
             UIRenderer.button(g, "ALL vs BOTS", L+140, cy, 150, 28, mx, my, onlineTeamSub==0, onlineTeamSub==0?new Color(20,80,140):new Color(10,40,70));
@@ -1205,7 +1205,7 @@ class SwitchProfileOverlay {
         g.setColor(new Color(0,0,0,170));
         g.fillRect(0,0,W,H);
 
-        int pw = 640, ph = confirmSignOut ? 220 : Math.min(540, 200 + Math.max(profiles.size(),1)*44);
+        int pw = 640, ph = confirmSignOut ? 220 : Math.min(540, 240 + Math.max(profiles.size(),1)*44);
         int px = CX - pw/2, py = H/2 - ph/2;
         UIRenderer.panel(g, px, py, pw, ph, confirmSignOut ? "SIGN OUT?" : "SWITCH PROFILE");
 
@@ -1244,7 +1244,7 @@ class SwitchProfileOverlay {
         g.setFont(GameConstants.F_SUBHEAD); g.setColor(GameConstants.C_GOLD);
         g.drawString("CREATE & SWITCH", lx, createY);
         createY += 6;
-        int nbw = pw-240, nbh = 38;
+        int nbw = pw-250, nbh = 38;
         g.setColor(editingNew ? new Color(30,65,15,230) : new Color(12,24,6,200));
         g.fillRoundRect(lx, createY, nbw, nbh, 8,8);
         g.setColor(editingNew ? GameConstants.C_ACCENT : new Color(50,85,22,150));
@@ -1253,7 +1253,7 @@ class SwitchProfileOverlay {
         g.setFont(GameConstants.F_HUD); g.setColor(GameConstants.C_WHITE);
         String disp = editingNew ? newNameInput+(((int)(time*2))%2==0?"|":"") : (newNameInput.isEmpty()?"Click to type name..":newNameInput);
         g.drawString(disp, lx+10, createY+24);
-        UIRenderer.button(g, "CREATE", lx+nbw+10, createY, 130, nbh, mx, my, false, new Color(35,95,14));
+        UIRenderer.button(g, "CREATE", lx+nbw+15, createY, 120, nbh, mx, my, false, new Color(35,95,14));
 
         if (feedbackTimer > 0) {
             g.setFont(GameConstants.F_BODY);
@@ -1295,9 +1295,9 @@ class SwitchProfileOverlay {
         }
 
         int createY = listY + Math.max(profiles.size(),1)*44 + 24;
-        int nbw = pw-240, nbh = 38;
+        int nbw = pw-250, nbh = 38;
         if (new java.awt.Rectangle(lx, createY, nbw, nbh).contains(mx,my)) { editingNew=true; return Action.NONE; }
-        if (new java.awt.Rectangle(lx+nbw+10, createY, 130, nbh).contains(mx,my)) {
+        if (new java.awt.Rectangle(lx+nbw+15, createY, 120, nbh).contains(mx,my)) {
             if (newNameInput.trim().isEmpty()) { feedbackMsg="Error: enter a name first."; feedbackTimer=2f; }
             else { pendingSwitch=newNameInput.trim(); newNameInput=""; editingNew=false; return Action.SWITCHED; }
             return Action.NONE;

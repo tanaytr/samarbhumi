@@ -86,7 +86,7 @@ jobs:
       - name: Packaging (Linux - Debian Package)
         if: matrix.os == 'ubuntu-22.04'
         run: |
-          jpackage --type deb --name "samarbhumi" --input . --main-jar Samarbhumi.jar --main-class Main \
+          jpackage --type deb --name "Samarbhumi" --input . --main-jar Samarbhumi.jar --main-class Main \
             --icon resources/app_logo.png \
             --license-file INSTALLER_INFO.txt \
             --app-version 1.2.1 \
