@@ -1052,9 +1052,10 @@ class PostMatchScreen {
     }
 
     private int renderPersonalResults(Graphics2D g, java.util.List<Player> players, int tx, int ty) {
-        g.setFont(GameConstants.F_HUD); g.setColor(GameConstants.C_GOLD);
-        g.drawString("PLAYER",tx,ty); g.drawString("KILLS",tx+280,ty);
-        g.drawString("DEATHS",tx+360,ty); g.drawString("K/D",tx+460,ty);
+        g.drawString("PLAYER",tx+16,ty); 
+        g.drawString("KILLS",tx+330,ty);
+        g.drawString("DEATHS",tx+425,ty); 
+        g.drawString("K/D",tx+540,ty);
         g.setColor(new Color(60,100,30,120)); g.setStroke(new BasicStroke(1f));
         g.drawLine(tx,ty+5,tx+680,ty+5);
         int[] iy={ty+12};
@@ -1103,9 +1104,11 @@ class PostMatchScreen {
 
         // Column headers
         g.setFont(GameConstants.F_HUD); g.setColor(GameConstants.C_GOLD);
-        g.drawString("PLAYER",tx+16,iy); g.drawString("KILLS",tx+280,iy);
-        g.drawString("DEATHS",tx+360,iy); g.drawString("K/D",tx+460,iy);
-        iy += 8;
+        g.drawString("PLAYER",tx+16,iy); 
+        g.drawString("KILLS",tx+330,iy);
+        g.drawString("DEATHS",tx+425,iy); 
+        g.drawString("K/D",tx+540,iy);
+        iy += 12;
 
         // VAJRA (Blue) section
         iy = drawTeamSection(g, players, com.samarbhumi.core.Enums.Team.BLUE,
@@ -1146,15 +1149,22 @@ class PostMatchScreen {
     private void drawPlayerRow(Graphics2D g, Player p, int tx, int rowY) {
         boolean isH=p.isHuman();
         g.setColor(isH?new Color(50,100,20,80):new Color(20,20,20,60));
-        g.fillRoundRect(tx-4,rowY-12,690,22,4,4);
+        g.fillRoundRect(tx-4,rowY-14,690,24,5,5);
         g.setFont(GameConstants.F_BODY); g.setColor(isH?GameConstants.C_GOLD2:GameConstants.C_WHITE);
         g.drawString(p.getName()+(isH?" (You)":""),tx+16,rowY+3);
+        
         Color tc=p.getTeam()==com.samarbhumi.core.Enums.Team.BLUE?GameConstants.C_TEAM_BLUE:GameConstants.C_TEAM_RED;
-        g.setColor(tc); g.fillOval(tx+183,rowY-9,12,12);
+        g.setColor(tc); g.fillOval(tx+285,rowY-9,12,12);
+        
         g.setColor(GameConstants.C_WHITE);
-        g.drawString(""+p.getKills(),tx+280,rowY+3);
-        g.drawString(""+p.getDeaths(),tx+360,rowY+3);
-        g.drawString(p.getDeaths()==0?"Perfect":String.format("%.1f",(float)p.getKills()/p.getDeaths()),tx+460,rowY+3);
+        FontMetrics fm = g.getFontMetrics();
+        // Stats right-aligned to their labels
+        String kStr = ""+p.getKills();
+        g.drawString(kStr, tx+330 + 35 - fm.stringWidth(kStr), rowY+3);
+        String dStr = ""+p.getDeaths();
+        g.drawString(dStr, tx+425 + 45 - fm.stringWidth(dStr), rowY+3);
+        String kdStr = p.getDeaths()==0?"Perfect":String.format("%.1f",(float)p.getKills()/p.getDeaths());
+        g.drawString(kdStr, tx+540 + 20 - fm.stringWidth(kdStr), rowY+3);
     }
 
     public Action handleClick(int mx, int my) {
