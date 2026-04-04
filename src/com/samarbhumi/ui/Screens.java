@@ -1322,7 +1322,11 @@ class SwitchProfileOverlay {
         if (new java.awt.Rectangle(lx, createY, nbw, nbh).contains(mx,my)) { editingNew=true; return Action.NONE; }
         if (new java.awt.Rectangle(lx+nbw+15, createY, 120, nbh).contains(mx,my)) {
             if (newNameInput.trim().isEmpty()) { feedbackMsg="Error: enter a name first."; feedbackTimer=2f; }
-            else { pendingSwitch=newNameInput.trim(); newNameInput=""; editingNew=false; return Action.SWITCHED; }
+            else { 
+                pendingSwitch=newNameInput.trim(); 
+                try { com.samarbhumi.progression.PlayerProfile.loadOrCreate(pendingSwitch).save(); } catch (Exception ignored) {}
+                newNameInput=""; editingNew=false; return Action.SWITCHED; 
+            }
             return Action.NONE;
         }
         // Sign out
@@ -1478,9 +1482,11 @@ class ProfileSelectScreen {
             if (newNameInput.trim().isEmpty()) {
                 feedbackMsg = "Error: Enter a name first."; feedbackTimer = 2f;
             } else {
-                profiles.add(newNameInput.trim());
+                String createdName = newNameInput.trim();
+                try { com.samarbhumi.progression.PlayerProfile.loadOrCreate(createdName).save(); } catch (Exception ignored) {}
+                profiles.add(createdName);
                 selected = profiles.size()-1;
-                feedbackMsg = "Profile '" + newNameInput + "' ready!"; feedbackTimer = 2f;
+                feedbackMsg = "Profile '" + createdName + "' ready!"; feedbackTimer = 2f;
                 newNameInput = ""; editingNew = false;
                 return Action.CREATE;
             }

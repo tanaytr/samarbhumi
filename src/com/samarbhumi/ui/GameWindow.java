@@ -65,6 +65,7 @@ public class GameWindow extends JFrame {
 
     private volatile int     mouseX = GameConstants.WIN_W / 2;
     private volatile int     mouseY = GameConstants.WIN_H / 2;
+    private volatile int     clickX = 0, clickY = 0;
     private volatile boolean mouseClicked  = false;
     private volatile boolean mouseDragging = false;
 
@@ -125,7 +126,11 @@ public class GameWindow extends JFrame {
             @Override public void mouseDragged(MouseEvent e) { mouseX=e.getX(); mouseY=e.getY(); mouseDragging=true; }
             @Override public void mousePressed(MouseEvent e) {
                 mouseX = e.getX(); mouseY = e.getY();
-                if (e.getButton() == MouseEvent.BUTTON1) mouseClicked = true;
+                if (e.getButton() == MouseEvent.BUTTON1) {
+                    clickX = e.getX();
+                    clickY = e.getY();
+                    mouseClicked = true;
+                }
                 canvas.requestFocusInWindow();
             }
         };
@@ -221,12 +226,14 @@ public class GameWindow extends JFrame {
 
             input.pollFrame();
 
-            boolean clicked  = mouseClicked;  mouseClicked  = false;
+            boolean clicked = mouseClicked;
+            int curClickX = clickX, curClickY = clickY;
+            mouseClicked  = false;
             boolean dragged  = mouseDragging; mouseDragging = false;
 
             while (accumulator >= DT) { update(DT); accumulator -= DT; }
 
-            if (clicked) handleClick(lmx, lmy);
+            if (clicked) handleClick(toLogicalX(curClickX), toLogicalY(curClickY));
             if (dragged)  handleDrag(lmx, lmy);
 
             render();
