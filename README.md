@@ -1,14 +1,13 @@
 # SAMARBHUMI — War Never Ends
-### A Java 2D Side-Scrolling Multiplayer Shooter  `v1.2.1`
+### A Java 2D Side-Scrolling Multiplayer Shooter  `v2.0`
 
 ---
 
-## What's New in v1.2.1 (The Compatibility Update)
-- **Maximum Linux & macOS Support:** Greatly expanded OS compatibility so the game now natively runs on Apple Silicon (M1+) hardware and older Linux distributions.
-- **Verified Distribution:** Windows Installers are now formally published by **"Shunya Labs"**, and the game's crosshair logo is perfectly integrated onto all desktop shortcuts.
-- **Flawless Multiplayer Hosting:** Backend improvements to guarantee ultra-low latency combat servers launch without a hitch.
-- **UI Fixes:** Perfected layout constraints in the Profile and Online menus to eliminate visual overlaps.
-- **Linux Compatibility:** Removed forced OpenGL properties to ensure a stable launch on all Linux distributions (fixing the black screen issue).
+## What's New in v2.0 (The Multiplayer & Performance Overhaul)
+- **10-Player Online Lobbies:** Up to 10 players per lobby.
+- **Host Controls & Username Syncing:** The Lobby host now has exclusive control over the match start button. Custom personal usernames are now synced peer-to-peer natively over the relay server socket without any complex backend modifications.
+- **Maximum Stability:** Eradicated the fatal BufferStrategy layout crash causing black screens across Windows/Linux/macOS out-of-the-box. Forced native OpenGL entirely for Linux to maintain 60 FPS while minimizing tearing.
+- **Leaderboard UI Fixes:** Leaderboard match results are beautifully structured eliminating text overlaps. Local save data `saves/` correctly points to the `user.home` directory, fixing silently dropped profile saves when installed into strict administrative environments to `C:\Program Files\`.
 
 ---
 
@@ -193,4 +192,4 @@ com.samarbhumi
 - Requires JDK 17+ for record syntax (UnlockEntry, StoreItem)
 
 ---
-*Samarbhumi — Built with pure Java. No external libraries. No sprites. No compromises. | v1.2.1*
+*Samarbhumi — Built with pure Java. No external libraries. No sprites. No compromises. | v2.0*

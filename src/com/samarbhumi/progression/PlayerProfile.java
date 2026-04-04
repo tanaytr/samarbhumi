@@ -12,8 +12,7 @@ import java.util.*;
  */
 public class PlayerProfile implements Serializable {
     private static final long serialVersionUID = 3L;
-    // Save path is now per-profile: saves/<name>.sav
-    private static final String SAVE_DIR = "saves/";
+    private static final String SAVE_DIR = System.getProperty("user.home") + File.separator + ".samarbhumi" + File.separator + "saves" + File.separator;
     
     public record LeaderboardEntry(String name, int level, int xp, int coins) {}
 

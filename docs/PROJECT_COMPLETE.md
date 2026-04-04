@@ -5,7 +5,14 @@
 
 ## Changelog
 
-### v1.2.1 (current)
+### v2.0 (current)
+- **10-Player Online Lobbies:** Increased capability from 4 to 10 parallel networked combatants.
+- **Username Network Sync:** Custom player profiles now broadcast their identities peer-to-peer over the socket relays.
+- **Host Launch Toggles:** Lobbies are restricted to starting only when the lobby creator manually initiates it.
+- **Robust Save Profiles:** Local `player.sav` storage files were migrated to `~/.samarbhumi/saves/` to respect admin-elevated read/write system directories.
+- **Cross-Platform Resiliency:** Stripped volatile BufferStrategy reconstruction loops that formerly blacked-out application frames out-of-the-box on Desktop rendering stacks.
+
+### v1.2.1
 - **Maximum Linux & macOS Support:** Greatly expanded OS compatibility so the game natively runs on Apple Silicon hardware and older Linux distros.
 - **Verified Distribution:** Windows Installers formally published by "Shunya Labs", and native desktop icons perfectly integrated on all systems.
 - **Flawless Multiplayer Hosting:** Backend architecture improvements to guarantee ultra-low latency combat servers launch perfectly.
@@ -201,7 +208,7 @@ The `ONLINE` mode tab in Battle Setup is UI-complete. To activate it:
 - Each client sends their inputs each frame to the relay server
 - Server broadcasts all inputs to all clients
 - Every client runs identical physics simulation
-- Up to 4 players per lobby
+- Up to 10 players per lobby
 
 ### Latency Tolerance
 The fixed-timestep loop + input delay of 1-2 frames makes the game playable at up to ~100ms RTT. For India-to-India connections this is typically 20-40ms.

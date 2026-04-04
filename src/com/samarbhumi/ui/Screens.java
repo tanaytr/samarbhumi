@@ -98,6 +98,7 @@ class MainMenuScreen {
                 if (my >= by + i*(bh+gap) && my <= by + i*(bh+gap) + bh) {
                     if (order[i] == Action.LEADERBOARD) {
                         showLeaderboard = true;
+                        lbCache = null; // force immediate fetch
                         return Action.NONE;
                     }
                     return order[i];
@@ -1142,7 +1143,7 @@ class PostMatchScreen {
         g.setFont(GameConstants.F_HUD);
         g.setColor(teamColor);
         g.drawString(teamLabel + (won ? "  ★ WINNER" : ""), tx+8, iy+15);
-        iy += 22;
+        iy += 36;
 
         // Players on this team, sorted by kills
         players.stream()

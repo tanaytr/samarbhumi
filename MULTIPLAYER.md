@@ -1,5 +1,5 @@
 # Samarbhumi — Online Multiplayer Setup
-> **v1.1** — Local 2-player and team modes are fully working out of the box.
+> **v2.0** — Local 2-player and team modes are fully working out of the box.
 > Online multiplayer (internet play) requires deploying the relay server described below.
 
 Online multiplayer uses a lightweight **relay server** hosted in the cloud.
@@ -19,7 +19,7 @@ Player D        ──┘
 
 - The server **does not run the game** — it only forwards player inputs
 - Every client runs an identical physics simulation (lockstep model)
-- Supports **2–4 players** per lobby
+- Supports **2–10 players** per lobby
 - Playable at up to ~100ms round-trip time (fine for same-country play)
 
 ---
