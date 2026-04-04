@@ -72,6 +72,9 @@ public class NetManager {
                     lastResponse = "JOINED";
                 } else if (line.startsWith("PLAYER_JOINED:")) {
                     try { totalPlayers = Integer.parseInt(line.split(":")[1]); } catch(Exception ignored){}
+                    if (localPlayerIdx != -1 && onlineNames.containsKey(localPlayerIdx)) {
+                        broadcastName(onlineNames.get(localPlayerIdx));
+                    }
                 } else if (line.startsWith("START:")) {
                     inMatch = true;
                     currentFrame = 0;
@@ -86,14 +89,14 @@ public class NetManager {
                         } catch (Exception ignored) {}
                     }
                 } else if (line.startsWith("INPUT:")) {
-                    // INPUT:code:frame:playerIdx:bitmask:aim
+                    // INPUT:frame:playerIdx:bitmask:aim
                     String[] p = line.split(":");
-                    if (p.length == 6) {
+                    if (p.length == 5) {
                         try {
-                            int frame = Integer.parseInt(p[2]);
-                            int pIdx = Integer.parseInt(p[3]);
-                            int mask = Integer.parseInt(p[4]);
-                            float aim = Float.parseFloat(p[5]);
+                            int frame = Integer.parseInt(p[1]);
+                            int pIdx = Integer.parseInt(p[2]);
+                            int mask = Integer.parseInt(p[3]);
+                            float aim = Float.parseFloat(p[4]);
                             frameInputs.computeIfAbsent(frame, k -> new NetInput[10])[pIdx] = new NetInput(mask, aim);
                         } catch (Exception ignored) {}
                     }
