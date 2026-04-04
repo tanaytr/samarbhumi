@@ -10,8 +10,10 @@ public class Main {
         // Performance: start hardware acceleration immediately
         System.setProperty("sun.java2d.accthreshold", "0");
 
-        // System.setProperty("sun.java2d.d3d", "true");
-        // System.setProperty("sun.java2d.opengl", "true");
+        String os = System.getProperty("os.name").toLowerCase();
+        if (os.contains("nix") || os.contains("nux") || os.contains("aix")) {
+            System.setProperty("sun.java2d.opengl", "true");
+        }
 
         System.setProperty("awt.useSystemAAFontSettings","on");
         System.setProperty("swing.aatext",               "true");

@@ -144,10 +144,6 @@ public class GameWindow extends JFrame {
                 renderW = Math.max(1, canvas.getWidth());
                 renderH = Math.max(1, canvas.getHeight());
                 recalcScale();
-                SwingUtilities.invokeLater(() -> {
-                    try { canvas.createBufferStrategy(2); }
-                    catch (Exception ignored) {}
-                });
             }
         });
 
