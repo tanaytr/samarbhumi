@@ -156,7 +156,7 @@ class MainMenuScreen {
     }
 
     private void drawLeaderboardModal(Graphics2D g, int mx, int my) {
-        int pw = 450, ph = 350;
+        int pw = 530, ph = 350;
         int px = (W - pw) / 2, py = (H - ph) / 2;
         
         // Dim background
@@ -171,8 +171,8 @@ class MainMenuScreen {
         // Draw headers individually for precise alignment
         g.drawString("RANK",   px + 30,  ry - 20);
         g.drawString("PLAYER", px + 95,  ry - 20);
-        g.drawString("LEVEL",  px + 280, ry - 20);
-        g.drawString("TOTAL XP", px + 355, ry - 20);
+        g.drawString("LEVEL",  px + 320, ry - 20);
+        g.drawString("TOTAL XP", px + 415, ry - 20);
 
         if (lbCache == null || lbCache.isEmpty()) {
             g.setColor(Color.WHITE);
@@ -196,13 +196,13 @@ class MainMenuScreen {
 
                 // Level
                 g.setColor(GameConstants.C_GOLD2);
-                g.drawString("Lv " + e.level(), px + 280, rowY);
+                g.drawString("Lv " + e.level(), px + 320, rowY);
 
                 // XP (Right-aligned under the header)
                 g.setFont(GameConstants.F_SMALL);
                 g.setColor(GameConstants.C_DIM);
                 String xpStr = String.format("%,d", e.xp());
-                g.drawString(xpStr, px + 355, rowY);
+                g.drawString(xpStr, px + 415, rowY);
 
                 g.setColor(new Color(80, 120, 40, 60));
                 g.drawLine(px + 30, rowY + 12, px + pw - 30, rowY + 12);
@@ -276,7 +276,7 @@ class LobbyScreen {
         UIRenderer.button(g, "ONLINE",         tabX + 345, modeY, 130, 34, mx, my, vsO, vsO ? new Color(30,80,100) : new Color(15,40,55));
 
         // ── Personal / Team mode toggle ──────────────────────────────────
-        int toggleY = modeY + 42;
+        int toggleY = modeY + 36;
         g.setFont(GameConstants.F_HUD); g.setColor(GameConstants.C_DIM);
         g.drawString("PLAY MODE:", L, toggleY + 20);
         int tgX = L + 120;
@@ -286,7 +286,7 @@ class LobbyScreen {
              teamMode ? new Color(20,60,110) : new Color(10,30,55));
 
         // ── Player name ──────────────────────────────────────────────────
-        int nameY = toggleY + 36;
+        int nameY = toggleY + 44;
         g.setFont(GameConstants.F_HUD);
         g.setColor(GameConstants.C_DIM);
         g.drawString("P1 NAME:", L, nameY + 20);
@@ -303,15 +303,22 @@ class LobbyScreen {
         if (!editingName) UIRenderer.button(g, "EDIT", nbx + nbw + 8, nameY, 48, nbh, mx, my, false, new Color(28,58,14));
 
         if (mode == GameMode.ONLINE) {
-            renderOnlinePanel(g, mx, my, L, nameY + 42);
+            renderOnlinePanel(g, mx, my, L, nameY + 46);
         } else {
-            renderLocalPanel(g, mx, my, L, nameY + 42);
+            renderLocalPanel(g, mx, my, L, nameY + 46);
         }
 
         // Buttons positioned relative to panel bottom (not H), so they always show
         int panelBottom = 35 + 620;  // panel y + panel height
         int btnY = panelBottom - 72;
-        UIRenderer.button(g, "[ START BATTLE ]", CX - 130, btnY, 290, 58, mx, my, false, new Color(38, 105, 14));
+        
+        if (mode == GameMode.ONLINE && NetManager.currentLobby != null && NetManager.localPlayerIdx != 0) {
+            g.setFont(GameConstants.F_HEAD);
+            g.setColor(GameConstants.C_GOLD2);
+            g.drawString("Waiting for Host to start...", CX - 130, btnY + 34);
+        } else {
+            UIRenderer.button(g, "[ START BATTLE ]", CX - 130, btnY, 290, 58, mx, my, false, new Color(38, 105, 14));
+        }
         UIRenderer.button(g, "[ BACK ]",          L,        btnY, 145, 58, mx, my, false, new Color(110, 28, 15));
     }
 
@@ -479,11 +486,18 @@ class LobbyScreen {
             g.setColor(onlineStatus.startsWith("Error") ? GameConstants.C_RED : new Color(80,200,80));
             g.drawString(onlineStatus, L + 20, cy);
             
-            // Draw player count
             if (NetManager.currentLobby != null) {
                 cy += 20;
                 g.setColor(GameConstants.C_GOLD2);
-                g.drawString("Players in Lobby: " + NetManager.totalPlayers + " / 4", L + 20, cy);
+                g.drawString("Players in Lobby: " + NetManager.totalPlayers + " / 10", L + 20, cy);
+                cy += 18;
+                g.setFont(GameConstants.F_SMALL);
+                g.setColor(GameConstants.C_WHITE);
+                for (int i=0; i<NetManager.totalPlayers; i++) {
+                    String name = NetManager.onlineNames.getOrDefault(i, "Player " + (i+1));
+                    g.drawString((i+1) + ". " + name, L + 20, cy);
+                    cy += 14;
+                }
             }
         }
 
@@ -650,8 +664,9 @@ class LobbyScreen {
             if (new Rectangle(L+20, startY+86, 200, 38).contains(mx,my)) {
                 onlineStatus = "Connecting to server...";
                 lobbyCode = generateLobbyCode();
+                String hostName = nameInput.isEmpty() ? "Host" : nameInput;
                 new Thread(() -> {
-                    if (NetManager.connectAndCreate(lobbyCode)) {
+                    if (NetManager.connectAndCreate(lobbyCode, hostName)) {
                         onlineStatus = "Lobby created! Share code: " + lobbyCode;
                     } else {
                         onlineStatus = "Error: Failed to connect to server.";
@@ -666,8 +681,9 @@ class LobbyScreen {
             if (new Rectangle(L+190, startY+150, 80, 32).contains(mx,my)) {
                 if (joinCodeInput.length()>=4) {
                     onlineStatus="Connecting to lobby "+joinCodeInput+"...";
+                    String guestName = nameInput.isEmpty() ? "Guest" : nameInput;
                     new Thread(() -> {
-                        NetManager.connectAndJoin(joinCodeInput);
+                        NetManager.connectAndJoin(joinCodeInput, guestName);
                         if ("JOINED".equals(NetManager.lastResponse)) {
                             lobbyCode = joinCodeInput;
                             onlineStatus = "Joined Lobby " + lobbyCode + ". Waiting for Host...";
@@ -678,18 +694,15 @@ class LobbyScreen {
                 } else onlineStatus="Error: Enter a valid 4-6 character code";
                 return Action.NONE;
             }
-            // Start button
+            // Start button (Host only)
             if (new Rectangle(CX-130, 583, 290, 58).contains(mx,my)) {
-                if (lobbyCode.isEmpty()) {
-                    onlineStatus = "Error: Create or Join a lobby first.";
-                    return Action.NONE;
-                }
-                if (NetManager.localPlayerIdx == 0) { // Host
-                    NetManager.startMatchBroadcast();
-                    return Action.START;
-                } else {
-                    onlineStatus = "Waiting for Host to start...";
-                    return Action.NONE;
+                if (NetManager.currentLobby != null) {
+                    if (NetManager.localPlayerIdx == 0) { // Host
+                        NetManager.startMatchBroadcast();
+                        return Action.START;
+                    } else {
+                        return Action.NONE; // Guest just falls through and ignores click
+                    }
                 }
             }
         } else {

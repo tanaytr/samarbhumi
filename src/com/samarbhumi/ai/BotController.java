@@ -38,9 +38,9 @@ public class BotController {
         this.bot = b;
         // ALL difficulties shoot fast enough to be dangerous
         switch (s.getDifficulty()) {
-            case EASY   -> { REACT_TIME=0.35f; AIM_ERROR=0.28f; THINK_RATE=0.18f; }
-            case MEDIUM -> { REACT_TIME=0.18f; AIM_ERROR=0.12f; THINK_RATE=0.12f; }
-            default     -> { REACT_TIME=0.08f; AIM_ERROR=0.04f; THINK_RATE=0.07f; }
+            case EASY   -> { REACT_TIME=0.6f; AIM_ERROR=0.45f; THINK_RATE=0.35f; }
+            case MEDIUM -> { REACT_TIME=0.35f; AIM_ERROR=0.2f; THINK_RATE=0.25f; }
+            default     -> { REACT_TIME=0.15f; AIM_ERROR=0.08f; THINK_RATE=0.15f; }
         }
     }
 

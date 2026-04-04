@@ -36,7 +36,8 @@ public class NetworkSession extends GameSession {
             }
             
             com.samarbhumi.core.Vec2 sp = team == Enums.Team.BLUE ? map.getSpawnBlue(i) : map.getSpawnRed(i);
-            String pName = isLocal ? profile.getPlayerName() : ("Player " + (i+1));
+            String cachedName = NetManager.onlineNames.getOrDefault(i, "Player " + (i+1));
+            String pName = isLocal ? profile.getPlayerName() : cachedName;
             Player p = new Player(i, pName, team, sp.x, sp.y, isLocal);
             
             if (isLocal) {

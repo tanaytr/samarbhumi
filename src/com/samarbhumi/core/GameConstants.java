@@ -32,7 +32,7 @@ public final class GameConstants {
     public static final int   PLAYER_H     = 44;
     public static final int   MAX_HP       = 100;
     public static final float RESPAWN_TIME = 3f;     // seconds
-    public static final int   MAX_PLAYERS  = 4;      // 1 human + 3 bots max per team
+    public static final int   MAX_PLAYERS  = 10;     // Up to 10 players in lobbies or custom games
 
     // ── Weapons ─────────────────────────────────────────────────────────────
     public static final int   BULLET_POOL_SIZE  = 256;

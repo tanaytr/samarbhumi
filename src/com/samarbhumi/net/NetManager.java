@@ -22,6 +22,9 @@ public class NetManager {
     public static volatile boolean inMatch = false;
     public static volatile int currentFrame = 0;
 
+    // Online name syncing via INPUT protocol
+    public static final Map<Integer, String> onlineNames = new ConcurrentHashMap<>();
+
     // Buffer of received inputs: frame -> playerIdx -> NetInput
     // ConcurrentHashMap since listener thread writes, main loop reads
     private static final Map<Integer, NetInput[]> frameInputs = new ConcurrentHashMap<>();
@@ -73,6 +76,15 @@ public class NetManager {
                     inMatch = true;
                     currentFrame = 0;
                     frameInputs.clear();
+                } else if (line.startsWith("INPUT:NAME:")) {
+                    // INPUT:NAME:playerIdx:name
+                    String[] p = line.split(":", 4);
+                    if (p.length == 4) {
+                        try {
+                            int pIdx = Integer.parseInt(p[2]);
+                            onlineNames.put(pIdx, p[3]);
+                        } catch (Exception ignored) {}
+                    }
                 } else if (line.startsWith("INPUT:")) {
                     // INPUT:code:frame:playerIdx:bitmask:aim
                     String[] p = line.split(":");
@@ -82,7 +94,7 @@ public class NetManager {
                             int pIdx = Integer.parseInt(p[3]);
                             int mask = Integer.parseInt(p[4]);
                             float aim = Float.parseFloat(p[5]);
-                            frameInputs.computeIfAbsent(frame, k -> new NetInput[4])[pIdx] = new NetInput(mask, aim);
+                            frameInputs.computeIfAbsent(frame, k -> new NetInput[10])[pIdx] = new NetInput(mask, aim);
                         } catch (Exception ignored) {}
                     }
                 }
@@ -94,27 +106,45 @@ public class NetManager {
         }
     }
 
-    public static boolean connectAndCreate(String code) {
+    public static boolean connectAndCreate(String code, String hostName) {
         if (!ensureConnected()) return false;
         lastResponse = null;
+        onlineNames.clear();
         out.println("CREATE:" + code);
         long start = System.currentTimeMillis();
         // block briefly for reply
         while (lastResponse == null && System.currentTimeMillis() - start < 3000) {
             try { Thread.sleep(50); } catch (Exception ignored) {}
         }
-        return "CREATED".equals(lastResponse);
+        if ("CREATED".equals(lastResponse)) {
+            onlineNames.put(localPlayerIdx, hostName);
+            broadcastName(hostName);
+            return true;
+        }
+        return false;
     }
 
-    public static boolean connectAndJoin(String code) {
+    public static boolean connectAndJoin(String code, String guestName) {
         if (!ensureConnected()) return false;
         lastResponse = null;
+        onlineNames.clear();
         out.println("JOIN:" + code);
         long start = System.currentTimeMillis();
         while (lastResponse == null && System.currentTimeMillis() - start < 3000) {
             try { Thread.sleep(50); } catch (Exception ignored) {}
         }
-        return "JOINED".equals(lastResponse);
+        if ("JOINED".equals(lastResponse)) {
+            onlineNames.put(localPlayerIdx, guestName);
+            broadcastName(guestName);
+            return true;
+        }
+        return false;
+    }
+
+    public static void broadcastName(String name) {
+        if (out != null && currentLobby != null) {
+            out.println("INPUT:NAME:" + localPlayerIdx + ":" + name);
+        }
     }
 
     public static void startMatchBroadcast() {
@@ -142,7 +172,7 @@ public class NetManager {
         if (input.p1FireMouse() || input.p1FireKey()) mask |= 1024;
 
         // Immediately put local input in our own frame buffer so we don't bounce it to server and back
-        frameInputs.computeIfAbsent(frame, k -> new NetInput[4])[localPlayerIdx] = new NetInput(mask, mappedAimAngle);
+        frameInputs.computeIfAbsent(frame, k -> new NetInput[10])[localPlayerIdx] = new NetInput(mask, mappedAimAngle);
 
         // Send to server
         out.println("INPUT:" + frame + ":" + localPlayerIdx + ":" + mask + ":" + mappedAimAngle);
