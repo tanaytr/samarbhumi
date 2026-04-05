@@ -51,13 +51,13 @@ jobs:
           jpackage --type exe --name "Samarbhumi" --input . --main-jar Samarbhumi.jar --main-class Main \
             --icon resources/app_logo.ico \
             --win-shortcut --win-menu --win-dir-chooser \
-            --app-version 2.0.0 \
+            --app-version 2.1.0 \
             --vendor "Shunya Labs" \
             --verbose
           jpackage --type msi --name "Samarbhumi" --input . --main-jar Samarbhumi.jar --main-class Main \
             --icon resources/app_logo.ico \
             --win-shortcut --win-menu --win-dir-chooser \
-            --app-version 2.0.0 \
+            --app-version 2.1.0 \
             --vendor "Shunya Labs" \
             --verbose
 
@@ -78,7 +78,7 @@ jobs:
           jpackage --type dmg --name "Samarbhumi" --input . --main-jar Samarbhumi.jar --main-class Main \
             --icon resources/app_logo.icns \
             --license-file INSTALLER_INFO.txt \
-            --app-version 2.0.0 \
+            --app-version 2.1.0 \
             --vendor "Shunya Labs" \
             --mac-package-name "Samarbhumi" \
             --verbose
@@ -89,7 +89,7 @@ jobs:
           jpackage --type deb --name "Samarbhumi" --input . --main-jar Samarbhumi.jar --main-class Main \
             --icon resources/app_logo.png \
             --license-file INSTALLER_INFO.txt \
-            --app-version 2.0.0 \
+            --app-version 2.1.0 \
             --vendor "Shunya Labs" \
             --linux-shortcut \
             --description "A fast-paced 2D action shooter - War Never Ends" \

@@ -644,19 +644,17 @@ class LobbyScreen {
         if (new Rectangle(tgX2,       toggleY2, 140, 28).contains(mx,my)) { teamMode=false; return Action.NONE; }
         if (new Rectangle(tgX2 + 150, toggleY2, 100, 28).contains(mx,my)) { teamMode=true;  return Action.NONE; }
 
+        // Name edit
+        int toggleY = modeY + 42;
+        int nameY = toggleY + 36;
+
         // Online team sub-mode buttons
         if (mode==GameMode.ONLINE && teamMode) {
-            // cy starts at startY + 82 + 4 + 60 = startY + 146
-            // and then cy += 48 for the team mode buttons
-            int startY2 = nameY + 42; // handleClick uses +42 for startY
-            int cy2 = startY2 + 146 + 48; 
+            int cy2 = nameY + 42 + 146 + 48; 
             if (new Rectangle(L+140, cy2, 150, 28).contains(mx,my)) { onlineTeamSub=0; return Action.NONE; }
             if (new Rectangle(L+300, cy2, 200, 28).contains(mx,my)) { onlineTeamSub=1; return Action.NONE; }
         }
 
-        // Name edit
-        int toggleY = modeY + 42;
-        int nameY = toggleY + 36;
         int nbx = L + 105;
         if (new Rectangle(nbx,nameY,200,28).contains(mx,my)||new Rectangle(nbx+208,nameY,48,28).contains(mx,my)) { editingName=true; return Action.NONE; }
 
@@ -903,12 +901,6 @@ class StoreScreen {
         }).toList();
     }
 
-    private java.util.List<PlayerProfile.StoreItem> getTabItemsRaw(int t) {
-        return PlayerProfile.STORE.stream().filter(i->i.cat()==switch(t){
-            case 0->UnlockCategory.CHARACTER;case 1->UnlockCategory.WEAPON_SKIN;case 2->UnlockCategory.DEATH_EFFECT;case 3->UnlockCategory.JET_TRAIL;
-            default->UnlockCategory.CONSUMABLE;
-        }).toList();
-    }
 
     public Action handleClick(int mx, int my, PlayerProfile profile) {
         int tx=CX-405,ty=110;
