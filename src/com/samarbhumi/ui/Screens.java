@@ -534,9 +534,9 @@ class LobbyScreen {
         g.setFont(GameConstants.F_SMALL);
         g.setColor(GameConstants.C_WHITE);
         String[] ctrl = {
-            "Left/Right=Move  Up x2=Double Jump  Down=Crouch",
-            "Num8=Jetpack    Num5=Melee    Num0=Reload",
-            "End=Pickup  PgDn=Swap  Arrow keys=Aim gun",
+            "Left/Right=Move  Up x2=Jump  Down=Crouch  Num8=Jetpack",
+            "Num5=Melee  Num0=Reload  Shift=Grenade  End=Pickup",
+            "PgDn=Swap Weapon  Arrow keys=Aim gun",
             "Enter=Shoot  |  Mouse LMB=Fire (mouse aim)",
         };
         int cy2 = y + 34;
@@ -646,9 +646,10 @@ class LobbyScreen {
 
         // Online team sub-mode buttons
         if (mode==GameMode.ONLINE && teamMode) {
-            int nameY2 = toggleY2+36;
-            int startY2 = nameY2+42;
-            int cy2 = startY2+86+60+18;
+            // cy starts at startY + 82 + 4 + 60 = startY + 146
+            // and then cy += 48 for the team mode buttons
+            int startY2 = nameY + 42; // handleClick uses +42 for startY
+            int cy2 = startY2 + 146 + 48; 
             if (new Rectangle(L+140, cy2, 150, 28).contains(mx,my)) { onlineTeamSub=0; return Action.NONE; }
             if (new Rectangle(L+300, cy2, 200, 28).contains(mx,my)) { onlineTeamSub=1; return Action.NONE; }
         }
@@ -828,7 +829,7 @@ class StoreScreen {
     public enum Action { NONE, BACK, BOUGHT }
     private int tab=0; private float time=0f;
     private final int W=UIRenderer.W, H=UIRenderer.H, CX=W/2;
-    private static final String[] TABS={"CHARACTERS","WEAPON SKINS","DEATH FX","JET TRAILS"};
+    private static final String[] TABS={"CHARACTERS","WEAPON SKINS","DEATH FX","JET TRAILS","ARSENAL"};
 
     public void update(float dt) { time+=dt; }
 
@@ -841,15 +842,15 @@ class StoreScreen {
         g.setFont(GameConstants.F_SMALL); g.setColor(GameConstants.C_DIM);
         g.drawString("Earn coins by playing matches!", CX-400, 102);
 
-        int tx=CX-400, ty=110;
+        int tx=CX-405, ty=110;
         for (int i=0;i<TABS.length;i++) {
-            boolean sel=(i==tab), over=new Rectangle(tx+i*200,ty,190,30).contains(mx,my);
+            boolean sel=(i==tab), over=new Rectangle(tx+i*162,ty,158,30).contains(mx,my);
             g.setColor(sel?new Color(40,80,15):over?new Color(25,50,10):new Color(15,30,6));
-            g.fillRoundRect(tx+i*200,ty,190,30,6,6);
+            g.fillRoundRect(tx+i*162,ty,158,30,6,6);
             g.setColor(sel?GameConstants.C_ACCENT:new Color(60,100,30,150));
-            g.setStroke(new BasicStroke(sel?2f:1f)); g.drawRoundRect(tx+i*200,ty,190,30,6,6);
-            g.setFont(GameConstants.F_HUD); g.setColor(sel?GameConstants.C_GOLD2:GameConstants.C_DIM);
-            UIRenderer.centerText(g,TABS[i],tx+i*200+95,ty+20);
+            g.setStroke(new BasicStroke(sel?2f:1f)); g.drawRoundRect(tx+i*162,ty,158,30,6,6);
+            g.setFont(new Font("SansSerif", Font.BOLD, 10)); g.setColor(sel?GameConstants.C_GOLD2:GameConstants.C_DIM);
+            UIRenderer.centerText(g,TABS[i],tx+i*162+79,ty+20);
         }
 
         java.util.List<PlayerProfile.StoreItem> items=getTabItems(tab);
@@ -897,13 +898,21 @@ class StoreScreen {
 
     private java.util.List<PlayerProfile.StoreItem> getTabItems(int t) {
         return PlayerProfile.STORE.stream().filter(i->i.cat()==switch(t){
-            case 0->UnlockCategory.CHARACTER;case 1->UnlockCategory.WEAPON_SKIN;case 2->UnlockCategory.DEATH_EFFECT;default->UnlockCategory.JET_TRAIL;
+            case 0->UnlockCategory.CHARACTER;case 1->UnlockCategory.WEAPON_SKIN;case 2->UnlockCategory.DEATH_EFFECT;case 3->UnlockCategory.JET_TRAIL;
+            case 4->UnlockCategory.DUAL_WIELD; default->UnlockCategory.CONSUMABLE;
+        }).toList();
+    }
+
+    private java.util.List<PlayerProfile.StoreItem> getTabItemsRaw(int t) {
+        return PlayerProfile.STORE.stream().filter(i->i.cat()==switch(t){
+            case 0->UnlockCategory.CHARACTER;case 1->UnlockCategory.WEAPON_SKIN;case 2->UnlockCategory.DEATH_EFFECT;case 3->UnlockCategory.JET_TRAIL;
+            default->UnlockCategory.CONSUMABLE;
         }).toList();
     }
 
     public Action handleClick(int mx, int my, PlayerProfile profile) {
-        int tx=CX-400,ty=110;
-        for (int i=0;i<TABS.length;i++) if(new Rectangle(tx+i*200,ty,190,30).contains(mx,my)){tab=i;return Action.NONE;}
+        int tx=CX-405,ty=110;
+        for (int i=0;i<TABS.length;i++) if(new Rectangle(tx+i*162,ty,158,30).contains(mx,my)){tab=i;return Action.NONE;}
         java.util.List<PlayerProfile.StoreItem> items=getTabItems(tab);
         int cols=4,iw=190,ih=130,sx=CX-400,sy=150,gx=10,gy=10;
         for (int i=0;i<items.size();i++){
@@ -941,19 +950,20 @@ class SettingsScreen {
         g.setFont(GameConstants.F_SMALL); g.setColor(GameConstants.C_WHITE);
         Object[][] rows = {
             {true,"PLAYER 1  (Arrow Keys + Mouse)"},
-            {false,"Left / Right","Move"},{false,"Up key","Jump  |  Up + Up quickly = Double Jump"},
+            {false,"Left/Right","Move  |  Up x2 = Double Jump"},
             {false,"Down","Crouch  |  Arrow keys also AIM gun"},
-            {false,"Num8","Jetpack  |  Num5 = Melee  |  Num0 = Reload"},
-            {false,"End","Pickup  |  PgDn = Swap Weapon"},
-            {false,"Enter","Shoot (uses arrow-key aim direction)"},
-            {false,"Mouse LMB","Fire (uses mouse aim — overrides key aim)"},
+            {false,"Num8 / Shift","Jetpack / Grenade"},
+            {false,"Num5 / Num0","Melee / Reload"},
+            {false,"End / PgDn","Pickup / Swap Weapon"},
+            {false,"Enter / LMB","Shoot (Key / Mouse Aim)"},
             {false,"ESC","Pause"},
             {true,""},
             {true,"PLAYER 2  (WASD + Mouse)"},
-            {false,"A / D","Move"},{false,"W key","Jump  |  W + W quickly = Double Jump"},
-            {false,"S","Crouch  |  E = Jetpack  |  Q = Melee"},
-            {false,"R","Reload  |  F = Pickup  |  Tab = Swap Weapon"},
-            {false,"Mouse LMB","Fire (mouse aim)"},
+            {false,"A / D","Move  |  W x2 = Double Jump"},
+            {false,"S / E","Crouch / Jetpack  |  Q = Melee"},
+            {false,"Ctrl / R","Grenade / Reload"},
+            {false,"F / G","Pickup / Swap Weapon"},
+            {false,"Tab / Mouse","Shoot / Fire (Mouse Aim)"},
         };
         int ly=bY+40;
         for (Object[] row : rows) {
@@ -1045,7 +1055,7 @@ class PostMatchScreen {
             nextY = renderPersonalResults(g, players, tx, ty);
         }
 
-        int by2=nextY+14;
+        int by2 = Math.max(nextY + 14, 380); // Ensure rewards don't push too far or overlap
         g.setFont(GameConstants.F_SUBHEAD); g.setColor(GameConstants.C_ACCENT2);
         g.drawString("+"+xpG+" XP",tx,by2+20); g.setColor(GameConstants.C_GOLD2);
         g.drawString("+"+coinsG+" coins",tx+130,by2+20);

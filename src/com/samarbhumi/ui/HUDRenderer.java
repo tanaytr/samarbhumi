@@ -345,8 +345,8 @@ public class HUDRenderer {
     private static void drawControlsHint(Graphics2D g) {
         int cx = SW / 2, y = SH - 4;
         g.setFont(GameConstants.F_SMALL);
-        String p1 = "P1: Arrows=Move | Up x2=Jump | Num8=Jet | Num5=Melee | Enter=Shoot | LMB=Fire";
-        String p2 = "P2: WASD | W x2=Jump | E=Jet | Q=Melee | R=Reload | LMB=Fire";
+        String p1 = "P1: Arrows=Move | Shift=Grenade | Num5=Melee | Num0=Reload | Enter/LMB=Fire";
+        String p2 = "P2: WASD=Move | Ctrl=Grenade | Q=Melee | R=Reload | LMB=Fire";
         FontMetrics fm = g.getFontMetrics();
         int tw = Math.max(fm.stringWidth(p1), fm.stringWidth(p2));
         g.setColor(new Color(0, 0, 0, 100));

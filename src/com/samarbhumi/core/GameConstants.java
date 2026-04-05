@@ -37,8 +37,8 @@ public final class GameConstants {
     // ── Weapons ─────────────────────────────────────────────────────────────
     public static final int   BULLET_POOL_SIZE  = 256;
     public static final int   PARTICLE_POOL_SIZE= 512;
-    public static final float MELEE_RANGE       = 50f;
-    public static final float MELEE_DAMAGE      = 30f;
+    public static final float MELEE_RANGE       = 65f;
+    public static final float MELEE_DAMAGE      = 35f;
 
     // ── Map / World ─────────────────────────────────────────────────────────
     public static final int   TILE_SIZE    = 32;

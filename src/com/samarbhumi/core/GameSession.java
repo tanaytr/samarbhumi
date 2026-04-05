@@ -153,6 +153,10 @@ public class GameSession {
         human.setCharacterSkin(profile.getEquippedSkin());
         human.setJetTrail(profile.getEquippedTrail());
         human.setDeathEffect(profile.getEquippedDeath());
+        human.setGrenadeCount(profile.getGrenadeStash());
+        if (profile.isDualWieldUnlocked()) {
+            human.replaceWeapon(new com.samarbhumi.weapon.Weapon(Enums.WeaponType.DUAL_PISTOLS));
+        }
         players.add(human);
         humanPlayerIdx = 0;
 
@@ -382,7 +386,7 @@ public class GameSession {
         if (input.p1Reload())  p.triggerReload();
         if (input.p1Swap())    p.swapWeapon();
         if (input.p1Pickup())  tryPickup(p);
-        if (input.p1Melee())   doMeleeHit(p);
+        if (input.p1Melee() && p.tryMelee()) doMeleeHit(p);
 
         // Grenade throw — Shift key, uses separate grenade inventory
         if (input.p1Grenade()) throwGrenade(p);
@@ -417,7 +421,7 @@ public class GameSession {
         if (input.p2Reload())  p.triggerReload();
         if (input.p2Swap())    p.swapWeapon();
         if (input.p2Pickup())  tryPickup(p);
-        if (input.p2Melee())   doMeleeHit(p);
+        if (input.p2Melee() && p.tryMelee()) doMeleeHit(p);
 
         // Grenade throw — Ctrl key
         if (input.p2Grenade()) throwGrenade(p);

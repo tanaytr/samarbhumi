@@ -66,5 +66,5 @@ public final class Enums {
         JET_BASIC, JET_FIRE, JET_ICE, JET_RAINBOW
     }
 
-    public enum UnlockCategory { CHARACTER, WEAPON_SKIN, DEATH_EFFECT, JET_TRAIL, DUAL_WIELD }
+    public enum UnlockCategory { CHARACTER, WEAPON_SKIN, DEATH_EFFECT, JET_TRAIL, DUAL_WIELD, CONSUMABLE }
 }

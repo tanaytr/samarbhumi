@@ -38,6 +38,7 @@ public class PlayerProfile implements Serializable {
     private final Set<SkinId> unlockedTrails  = new HashSet<>();
     private final Set<SkinId> unlockedDeaths  = new HashSet<>();
     private boolean dualWieldUnlocked = false;
+    private int     grenadeStash      = 2; // persistent supply
 
     // Equipped
     private SkinId  equippedSkin   = SkinId.WARRIOR;
@@ -85,7 +86,9 @@ public class PlayerProfile implements Serializable {
         new StoreItem(SkinId.JET_RAINBOW,  UnlockCategory.JET_TRAIL,    "Rainbow Trail",   400),
         new StoreItem(SkinId.DEATH_EXPLODE,UnlockCategory.DEATH_EFFECT, "Explosion",       120),
         new StoreItem(SkinId.DEATH_STAR,   UnlockCategory.DEATH_EFFECT, "Star Burst",      180),
-        new StoreItem(SkinId.DEATH_COINS,  UnlockCategory.DEATH_EFFECT, "Coin Rain",       250)
+        new StoreItem(SkinId.DEATH_COINS,  UnlockCategory.DEATH_EFFECT, "Coin Rain",       250),
+        new StoreItem(null,                UnlockCategory.DUAL_WIELD,   "Dual Pistols",    300),
+        new StoreItem(null,                UnlockCategory.CONSUMABLE,   "3x Grenades",      50)
     );
 
     public PlayerProfile(String name) {
@@ -162,9 +165,22 @@ public class PlayerProfile implements Serializable {
 
     public boolean buy(StoreItem item) {
         if (coins < item.cost()) return false;
-        if (isUnlocked(item.skin(), item.cat())) return true; // already owned
+        if (item.cat() == UnlockCategory.CONSUMABLE) {
+            coins -= item.cost();
+            grenadeStash = Math.min(grenadeStash + 3, 9);
+            return true;
+        }
+        if (isUnlocked(item.skin(), item.cat())) return false;
         coins -= item.cost();
-        applyUnlock(new UnlockEntry(0, item.skin(), item.cat(), item.label(), item.cost()));
+        if (item.cat() == UnlockCategory.DUAL_WIELD) { dualWieldUnlocked=true; }
+        else if (item.skin() != null) {
+            switch(item.cat()) {
+                case CHARACTER, WEAPON_SKIN -> unlockedSkins.add(item.skin());
+                case JET_TRAIL   -> unlockedTrails.add(item.skin());
+                case DEATH_EFFECT-> unlockedDeaths.add(item.skin());
+                default -> {}
+            }
+        }
         return true;
     }
 
@@ -175,6 +191,7 @@ public class PlayerProfile implements Serializable {
             case JET_TRAIL   -> unlockedTrails.contains(s);
             case DEATH_EFFECT-> unlockedDeaths.contains(s);
             case DUAL_WIELD  -> dualWieldUnlocked;
+            case CONSUMABLE  -> false;
         };
     }
 
@@ -282,4 +299,7 @@ public class PlayerProfile implements Serializable {
         if (level>=10) return "Corporal";if (level>=5)  return "Private";
         return "Recruit";
     }
+
+    public int     getGrenadeStash()    { return grenadeStash; }
+    public void    useGrenadeFromStash(){ grenadeStash = Math.max(0, grenadeStash-1); }
 }

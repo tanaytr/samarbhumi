@@ -338,4 +338,5 @@ public class Player extends PhysicsBody {
     public int       getGrenadeCount()   { return grenadeCount; }
     public void      addGrenades(int n)  { grenadeCount = Math.min(grenadeCount+n, 9); }
     public boolean   useGrenade()        { if(grenadeCount<=0) return false; grenadeCount--; return true; }
+    public void      setGrenadeCount(int n){ this.grenadeCount = n; }
 }
