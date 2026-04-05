@@ -84,7 +84,7 @@ jobs:
             --verbose
 
       - name: Packaging (Linux - Debian Package)
-        if: matrix.os == 'ubuntu-22.04'
+        if: matrix.os == 'ubuntu-latest'
         run: |
           jpackage --type deb --name "Samarbhumi" --input . --main-jar Samarbhumi.jar --main-class Main \
             --icon resources/app_logo.png \
