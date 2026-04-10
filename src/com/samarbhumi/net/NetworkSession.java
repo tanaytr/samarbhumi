@@ -62,17 +62,10 @@ public class NetworkSession extends GameSession {
             return;
         }
 
-        // Only send input once per frame lock. If we are blocked waiting for peers, don't resend!
-        // We can just rely on NetManager putting it in local buffer.
-        NetManager.NetInput[] localCheck = NetManager.isFrameReady(frame) ? NetManager.consumeFrame(frame) : null;
-
-        if (localCheck == null && NetManager.localPlayerIdx != -1) {
-            // We haven't consumed it yet, so meaning frame is not completely ready.
-            // But did WE send our input yet? 
-            if (com.samarbhumi.net.NetManager.isFrameReady(frame)) {
-               // nothing, handled below
-            } else {
-                // Send our local input for this frame
+        // Check if all players have sent input for this frame
+        if (!NetManager.isFrameReady(frame)) {
+            // We are missing some inputs. Did WE send ours yet?
+            if (NetManager.localPlayerIdx != -1) {
                 Player localP = getPlayers().get(NetManager.localPlayerIdx);
                 float keyAim = localInput.p1KeyAimAngle();
                 float aimAngle;
@@ -82,27 +75,25 @@ public class NetworkSession extends GameSession {
                 } else {
                     aimAngle = keyAim;
                 }
-                
-                // Determine if we already sent the input for this frame (NetManager handles caching internally but let's be safe)
-                // Actually NetManager.sendLocalInput overwrites the same frame slot if called repeatedly.
                 NetManager.sendLocalInput(frame, localInput, aimAngle);
             }
-        }
 
-        // Lockstep wait
-        if (!NetManager.isFrameReady(frame)) {
-            stuckFrames++;
-            if (stuckFrames > MAX_STUCK_FRAMES) {
-                System.err.println("[NET] Desync/Timeout on frame " + frame + ". Forcing disconnect.");
-                NetManager.disconnect();
-                matchOver = true;
+            // Still not ready? Wait for peers.
+            if (!NetManager.isFrameReady(frame)) {
+                stuckFrames++;
+                if (stuckFrames > MAX_STUCK_FRAMES) {
+                    System.err.println("[NET] Desync/Timeout on frame " + frame + ". Forcing disconnect.");
+                    NetManager.disconnect();
+                    matchOver = true;
+                }
+                return;
             }
-            return;
         }
-        stuckFrames = 0;
         
-        NetManager.NetInput[] inputs = localCheck != null ? localCheck : NetManager.consumeFrame(frame);
-        if (inputs == null) return; // Should never happen
+        // Frame is now ready for sure. Consume it.
+        stuckFrames = 0;
+        NetManager.NetInput[] inputs = NetManager.consumeFrame(frame);
+        if (inputs == null) return; 
         
         // Apply inputs to specific players
         for (int i=0; i<inputs.length; i++) {
