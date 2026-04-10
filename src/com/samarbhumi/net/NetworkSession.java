@@ -13,7 +13,7 @@ public class NetworkSession extends GameSession {
     // Track previous masks to detect JUST_PRESSED events for actions
     private int[] prevMasks;
     private int   stuckFrames = 0;
-    private static final int MAX_STUCK_FRAMES = 300; // 5 seconds at 60fps
+    private static final int MAX_STUCK_FRAMES = 180; // 3 seconds at 60fps
 
     public NetworkSession(GameMap map, PlayerProfile profile, boolean teamMode) {
         super(map, profile, 0, com.samarbhumi.core.Enums.Difficulty.MEDIUM, false, teamMode);

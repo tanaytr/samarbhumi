@@ -121,9 +121,6 @@ public class GameWindow extends JFrame {
                 }
             }
         });
-        canvas.addMouseMotionListener(input);
-        canvas.addMouseListener(input);
-
         MouseAdapter uiMouse = new MouseAdapter() {
             @Override public void mouseMoved(MouseEvent e)   { mouseX=e.getX(); mouseY=e.getY(); }
             @Override public void mouseDragged(MouseEvent e) { mouseX=e.getX(); mouseY=e.getY(); mouseDragging=true; }
@@ -135,10 +132,11 @@ public class GameWindow extends JFrame {
                 canvas.requestFocusInWindow();
             }
         };
+        // Consolidated Mouse Handling
         canvas.addMouseListener(uiMouse);
         canvas.addMouseMotionListener(uiMouse);
-        canvas.addMouseMotionListener(uiMouse);
-        // Removed redundant addMouseListener(uiMouse) to the JFrame to prevent double clicks
+        canvas.addMouseListener(input); // Still need InputState for during-match polling
+        canvas.addMouseMotionListener(input);
 
         canvas.addComponentListener(new ComponentAdapter() {
             @Override public void componentResized(ComponentEvent e) {
@@ -212,7 +210,8 @@ public class GameWindow extends JFrame {
 
         while (running) {
             long  now   = System.nanoTime();
-            float frame = Math.min((now - prevTime) / 1_000_000_000f, 0.05f);
+            // REMOVED delta cap to prevent 'slow motion' feeling. Max 100ms per frame to prevent jumping.
+            float frame = Math.min((now - prevTime) / 1_000_000_000f, 0.15f);
             prevTime    = now;
             accumulator += frame;
 
