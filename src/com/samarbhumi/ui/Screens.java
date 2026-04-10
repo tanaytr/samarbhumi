@@ -404,8 +404,8 @@ class LobbyScreen {
             g.drawString("2 PLAYER LOCAL  -  Both play on same keyboard", L + 12, botY + 22);
             g.setFont(GameConstants.F_SMALL);
             g.setColor(GameConstants.C_WHITE);
-            g.drawString("P1: Arrow Keys | Up x2=Jump | Num8=Jet | Num5=Melee | Enter=Shoot", L + 12, botY + 42);
-            g.drawString("P2: WASD | W x2=Jump | E=Jet | Q=Melee | R=Reload | LMB=Fire", L + 12, botY + 58);
+            g.drawString("P1: WASD / Arrows | SPACE=Jump | SHIFT=Grenade | Q=Melee | R=Reload", L + 12, botY + 42);
+            g.drawString("P2: WASD only (Local 2P) | E=Jet | Q=Melee | LMB=Fire", L + 12, botY + 58);
             // Co-op label
             if (teamMode) {
                 g.setFont(GameConstants.F_SMALL); g.setColor(GameConstants.C_TEAM_BLUE);

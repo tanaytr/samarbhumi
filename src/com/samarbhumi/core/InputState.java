@@ -31,6 +31,7 @@ public class InputState implements KeyListener, MouseListener, MouseMotionListen
     public volatile float   mouseX, mouseY;
     public volatile boolean mouseLeft, mouseRight;
     public volatile boolean mouseMoved;
+    public boolean singlePlayer = true; // Use WASD+Arrows for P1 in single player
 
     public synchronized void pollFrame() {
         justPressed.clear();
@@ -44,30 +45,32 @@ public class InputState implements KeyListener, MouseListener, MouseMotionListen
     public boolean pressed(int k) { return justPressed.contains(k); }
 
     // ── P1 — Arrow Keys + Numpad (with number-row fallbacks) ────────────
-    public boolean p1Left()      { return held(KeyEvent.VK_LEFT); }
-    public boolean p1Right()     { return held(KeyEvent.VK_RIGHT); }
-    // Up arrow for jump - also Space as alternative
-    public boolean p1Jump()      { return pressed(KeyEvent.VK_UP) || pressed(KeyEvent.VK_SPACE); }
-    public boolean p1JumpHeld()  { return held(KeyEvent.VK_UP)    || held(KeyEvent.VK_SPACE); }
-    public boolean p1Down()      { return held(KeyEvent.VK_DOWN); }
+    public boolean p1Left()      { return held(KeyEvent.VK_LEFT) || (singlePlayer && held(KeyEvent.VK_A)); }
+    public boolean p1Right()     { return held(KeyEvent.VK_RIGHT)|| (singlePlayer && held(KeyEvent.VK_D)); }
+    // Up arrow for jump - also Space as alternative. In single player, W also works.
+    public boolean p1Jump()      { return pressed(KeyEvent.VK_UP) || pressed(KeyEvent.VK_SPACE) || (singlePlayer && pressed(KeyEvent.VK_W)); }
+    public boolean p1JumpHeld()  { return held(KeyEvent.VK_UP)    || held(KeyEvent.VK_SPACE)    || (singlePlayer && held(KeyEvent.VK_W)); }
+    public boolean p1Down()      { return held(KeyEvent.VK_DOWN) || (singlePlayer && held(KeyEvent.VK_S)); }
     // Numpad 8 OR keyboard 8 for jetpack
-    public boolean p1Jetpack()   { return held(KeyEvent.VK_NUMPAD8) || held(KeyEvent.VK_8); }
+    public boolean p1Jetpack()   { return held(KeyEvent.VK_NUMPAD8) || held(KeyEvent.VK_8) || (singlePlayer && held(KeyEvent.VK_E)); }
     // Left Mouse Button fires (mouse aim). Enter fires (arrow key aim).
     public boolean p1FireMouse() { return mouseLeft; }
     public boolean p1FireKey()   { return held(KeyEvent.VK_ENTER); }
-    // SHIFT = Throw Grenade (P1)
-    public boolean p1Grenade()   { return pressed(KeyEvent.VK_SHIFT); }
-    // Numpad 0 OR keyboard 0 for reload
-    public boolean p1Reload()    { return pressed(KeyEvent.VK_NUMPAD0) || pressed(KeyEvent.VK_0); }
-    // Numpad 5 OR keyboard 5 for melee
-    public boolean p1Melee()     { return pressed(KeyEvent.VK_NUMPAD5) || pressed(KeyEvent.VK_5) || pressed(KeyEvent.VK_DECIMAL); }
-    public boolean p1Pickup()    { return pressed(KeyEvent.VK_END) || pressed(KeyEvent.VK_INSERT) || pressed(KeyEvent.VK_9); }
-    public boolean p1Swap()      { return pressed(KeyEvent.VK_PAGE_DOWN) || pressed(KeyEvent.VK_7); }
+    // SHIFT = Throw Grenade (P1). In single player, CTRL/Q can be used too.
+    public boolean p1Grenade()   { return pressed(KeyEvent.VK_SHIFT) || (singlePlayer && (pressed(KeyEvent.VK_CONTROL) || pressed(KeyEvent.VK_Q))); }
+    // Numpad 0 OR keyboard 0 for reload. In single player, R also works.
+    public boolean p1Reload()    { return pressed(KeyEvent.VK_NUMPAD0) || pressed(KeyEvent.VK_0) || (singlePlayer && pressed(KeyEvent.VK_R)); }
+    // Numpad 5 OR keyboard 5 for melee. In single player, Q/E/F can be used.
+    public boolean p1Melee()     { return pressed(KeyEvent.VK_NUMPAD5) || pressed(KeyEvent.VK_5) || pressed(KeyEvent.VK_DECIMAL) || (singlePlayer && pressed(KeyEvent.VK_Q)); }
+    public boolean p1Pickup()    { return pressed(KeyEvent.VK_END) || pressed(KeyEvent.VK_INSERT) || pressed(KeyEvent.VK_9) || (singlePlayer && pressed(KeyEvent.VK_F)); }
+    public boolean p1Swap()      { return pressed(KeyEvent.VK_PAGE_DOWN) || pressed(KeyEvent.VK_7) || (singlePlayer && (pressed(KeyEvent.VK_TAB) || pressed(KeyEvent.VK_G))); }
 
     /** Returns aim angle from held arrow keys, NaN if none held */
     public float p1KeyAimAngle() {
-        boolean u = held(KeyEvent.VK_UP), d = held(KeyEvent.VK_DOWN);
-        boolean l = held(KeyEvent.VK_LEFT), r = held(KeyEvent.VK_RIGHT);
+        boolean u = held(KeyEvent.VK_UP)    || (singlePlayer && held(KeyEvent.VK_W));
+        boolean d = held(KeyEvent.VK_DOWN)  || (singlePlayer && held(KeyEvent.VK_S));
+        boolean l = held(KeyEvent.VK_LEFT)  || (singlePlayer && held(KeyEvent.VK_A));
+        boolean r = held(KeyEvent.VK_RIGHT) || (singlePlayer && held(KeyEvent.VK_D));
         if (r && u)  return -(float)Math.PI / 4;
         if (r && d)  return  (float)Math.PI / 4;
         if (l && u)  return -(float)Math.PI * 3/4;

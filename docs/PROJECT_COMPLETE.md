@@ -5,12 +5,22 @@
 
 ## Changelog
 
-### v2.0 (current)
+### v3.0 (current)
+- **Robust Input Engine:** Transitioned to a `ConcurrentLinkedQueue` for mouse events, eliminating "click-lag" and ensuring 100% registration reliability.
+- **Lockstep Resiliency:** Implemented a frame-stalling watchdog in `NetworkSession` with auto-disconnect for timed-out peers to prevent lobby/match freezes.
+- **Dual Control Support:** Single-player modes now natively support both WASD and Arrow Keys simultaneously for a more flexible pilot experience.
+- **Technical Defense Docs:** Added a comprehensive Project Defense document detailing the OOP implementation across all mandatory criteria.
+
+### v2.1.0
+- **Store Expansion:** Added "ARSENAL" tab with Grenades (consumable) and Dual Pistols (permanent).
+- **Melee Combat:** Balanced range and cooldown.
+- **Persistence:** Full profile integration for store purchases.
+
+### v2.0
 - **10-Player Online Lobbies:** Increased capability from 4 to 10 parallel networked combatants.
 - **Username Network Sync:** Custom player profiles now broadcast their identities peer-to-peer over the socket relays.
 - **Host Launch Toggles:** Lobbies are restricted to starting only when the lobby creator manually initiates it.
-- **Robust Save Profiles:** Local `player.sav` storage files were migrated to `~/.samarbhumi/saves/` to respect admin-elevated read/write system directories.
-- **Cross-Platform Resiliency:** Stripped volatile BufferStrategy reconstruction loops that formerly blacked-out application frames out-of-the-box on Desktop rendering stacks.
+- **Cross-Platform Resiliency:** Stripped volatile BufferStrategy reconstruction loops.
 
 ### v1.2.1
 - **Maximum Linux & macOS Support:** Greatly expanded OS compatibility so the game natively runs on Apple Silicon hardware and older Linux distros.

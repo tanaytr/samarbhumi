@@ -15,6 +15,7 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.BufferStrategy;
 import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * Main application window and fixed-timestep game loop.
@@ -66,7 +67,7 @@ public class GameWindow extends JFrame {
     private volatile int     mouseX = GameConstants.WIN_W / 2;
     private volatile int     mouseY = GameConstants.WIN_H / 2;
     private volatile int     clickX = 0, clickY = 0;
-    private volatile boolean mouseClicked  = false;
+    private final ConcurrentLinkedQueue<Point> clickQueue = new ConcurrentLinkedQueue<>();
     private volatile boolean mouseDragging = false;
 
     private volatile int   renderW = GameConstants.WIN_W;
@@ -127,17 +128,15 @@ public class GameWindow extends JFrame {
             @Override public void mousePressed(MouseEvent e) {
                 mouseX = e.getX(); mouseY = e.getY();
                 if (e.getButton() == MouseEvent.BUTTON1) {
-                    clickX = e.getX();
-                    clickY = e.getY();
-                    mouseClicked = true;
+                    clickQueue.add(new Point(e.getX(), e.getY()));
                 }
                 canvas.requestFocusInWindow();
             }
         };
         canvas.addMouseListener(uiMouse);
         canvas.addMouseMotionListener(uiMouse);
-        addMouseListener(uiMouse);
-        addMouseMotionListener(uiMouse);
+        canvas.addMouseMotionListener(uiMouse);
+        // Removed redundant addMouseListener(uiMouse) to the JFrame to prevent double clicks
 
         canvas.addComponentListener(new ComponentAdapter() {
             @Override public void componentResized(ComponentEvent e) {
@@ -222,15 +221,21 @@ public class GameWindow extends JFrame {
 
             input.pollFrame();
 
-            boolean clicked = mouseClicked;
-            int curClickX = clickX, curClickY = clickY;
-            mouseClicked  = false;
-            boolean dragged  = mouseDragging; mouseDragging = false;
+            int lmx = toLogicalX(mouseX);
+            int lmy = toLogicalY(mouseY);
+            input.mouseX = lmx;
+            input.mouseY = lmy;
 
             while (accumulator >= DT) { update(DT); accumulator -= DT; }
 
-            if (clicked) handleClick(toLogicalX(curClickX), toLogicalY(curClickY));
-            if (dragged)  handleDrag(lmx, lmy);
+            // Handle ALL clicks in the queue for this frame
+            Point click;
+            while ((click = clickQueue.poll()) != null) {
+                handleClick(toLogicalX(click.x), toLogicalY(click.y));
+            }
+
+            boolean dragged = mouseDragging; mouseDragging = false;
+            if (dragged) handleDrag(lmx, lmy);
 
             render();
 
@@ -426,6 +431,7 @@ public class GameWindow extends JFrame {
                             noProfilePopupTimer = 15f;
                         } else {
                             lobby.setNameDefault(profile.getPlayerName());
+                            input.singlePlayer = true; // Default for menu navigation and solo
                             state = AppState.LOBBY;
                         }
                     }
@@ -499,9 +505,11 @@ public class GameWindow extends JFrame {
         GameMap map = MapFactory.create(lobby.getSelectedMap());
         if (lobby.getMode() == LobbyScreen.GameMode.ONLINE) {
             session = new com.samarbhumi.net.NetworkSession(map, profile, lobby.isTeamMode());
+            input.singlePlayer = true; // Only one local player in online mode
         } else {
             session = new GameSession(map, profile, lobby.getNumBots(), lobby.getDifficulty(),
                                      lobby.isTwoPlayer(), lobby.isTeamMode());
+            input.singlePlayer = !lobby.isTwoPlayer();
         }
         gameScreen  = new GameScreen(session);
         state       = AppState.PLAYING;

@@ -1,5 +1,5 @@
 # SAMARBHUMI — War Never Ends
-### A Java 2D Side-Scrolling Multiplayer Shooter  `v2.0`
+### A Java 2D Side-Scrolling Multiplayer Shooter  `v3.0`
 
 ---
 

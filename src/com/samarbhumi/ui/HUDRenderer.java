@@ -36,7 +36,10 @@ public class HUDRenderer {
         drawScoreboard(g, allPlayers, teamMode);
         if (teamMode) drawTeamBars(g, blueKills, redKills, killsToWin);
         else          drawGoalBars(g, human, allPlayers, killsToWin, deathsToLose);
-        drawControlsHint(g);
+        
+        long humanCount = allPlayers.stream().filter(p -> p.isHuman()).count();
+        drawControlsHint(g, humanCount == 1);
+        
         drawRespawnOverlay(g, human);
     }
 
@@ -342,11 +345,13 @@ public class HUDRenderer {
 
     // ── Controls hint (bottom-centre) ────────────────────────────────────
 
-    private static void drawControlsHint(Graphics2D g) {
+    private static void drawControlsHint(Graphics2D g, boolean singlePlayer) {
         int cx = SW / 2, y = SH - 4;
         g.setFont(GameConstants.F_SMALL);
-        String p1 = "P1: Arrows=Move | Shift=Grenade | Num5=Melee | Num0=Reload | Enter/LMB=Fire";
-        String p2 = "P2: WASD=Move | Ctrl=Grenade | Q=Melee | R=Reload | LMB=Fire";
+        
+        String p1 = singlePlayer ? "WASD / ARROWS = Move | SPACE=Jump | SHIFT=Grenade | Q=Melee | R=Reload" : "P1: ARROWS=Move | SHIFT=Grenade | Num5=Melee | Num0=Reload";
+        String p2 = singlePlayer ? "LMB / ENTER = Fire | F=Pickup | TAB=Swap | ESC=Pause" : "P2: WASD=Move | CTRL=Grenade | Q=Melee | R=Reload | LMB=Fire";
+        
         FontMetrics fm = g.getFontMetrics();
         int tw = Math.max(fm.stringWidth(p1), fm.stringWidth(p2));
         g.setColor(new Color(0, 0, 0, 100));
