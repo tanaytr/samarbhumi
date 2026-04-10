@@ -60,6 +60,7 @@ public class GameWindow extends JFrame {
     private GameScreen   gameScreen;
     private int          pendingXP, pendingCoins;
     private List<String> pendingUnlocks;
+    private volatile boolean isStartingMatch = false;
 
     private final Canvas  canvas;
     private volatile boolean running = false;
@@ -80,6 +81,7 @@ public class GameWindow extends JFrame {
         super("Samarbhumi \u2014 War Never Ends");
         audio   = new AudioEngine();
         input   = new InputState();
+        input.singlePlayer = true; // Use combined controls by default
         profile = null;   // start as guest — home page always loads
         profileSelect.refresh();
 
@@ -225,12 +227,12 @@ public class GameWindow extends JFrame {
 
             // Handle ALL clicks in the queue for this frame
             Point click;
-            while ((click = clickQueue.poll()) != null) {
+            while (!isStartingMatch && (click = clickQueue.poll()) != null) {
                 handleClick(toLogicalX(click.x), toLogicalY(click.y));
             }
 
             boolean dragged = mouseDragging; mouseDragging = false;
-            if (dragged) handleDrag(lmx, lmy);
+            if (dragged && !isStartingMatch) handleDrag(toLogicalX(mouseX), toLogicalY(mouseY));
 
             render();
 
@@ -494,21 +496,32 @@ public class GameWindow extends JFrame {
     }
 
     private void startMatch() {
+        if (isStartingMatch) return;
+        isStartingMatch = true;
+        
         String nameInput = lobby.getNameInput();
         if (profile != null && !nameInput.isEmpty()) profile.setPlayerName(nameInput);
 
-        GameMap map = MapFactory.create(lobby.getSelectedMap());
-        if (lobby.getMode() == LobbyScreen.GameMode.ONLINE) {
-            session = new com.samarbhumi.net.NetworkSession(map, profile, lobby.isTeamMode());
-            input.singlePlayer = true; // Only one local player in online mode
-        } else {
-            session = new GameSession(map, profile, lobby.getNumBots(), lobby.getDifficulty(),
-                                     lobby.isTwoPlayer(), lobby.isTeamMode());
-            input.singlePlayer = !lobby.isTwoPlayer();
-        }
-        gameScreen  = new GameScreen(session);
-        state       = AppState.PLAYING;
-        audio.playTheme(AudioEngine.THEME_BATTLE);
+        new Thread(() -> {
+            try {
+                GameMap map = MapFactory.create(lobby.getSelectedMap());
+                if (lobby.getMode() == LobbyScreen.GameMode.ONLINE) {
+                    session = new com.samarbhumi.net.NetworkSession(map, profile, lobby.isTeamMode());
+                    input.singlePlayer = true; 
+                } else {
+                    session = new GameSession(map, profile, lobby.getNumBots(), lobby.getDifficulty(),
+                                             lobby.isTwoPlayer(), lobby.isTeamMode());
+                    input.singlePlayer = !lobby.isTwoPlayer();
+                }
+                gameScreen  = new GameScreen(session);
+                state       = AppState.PLAYING;
+                audio.playTheme(AudioEngine.THEME_BATTLE);
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                isStartingMatch = false;
+            }
+        }).start();
     }
 
     private void endMatch() {

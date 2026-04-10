@@ -530,14 +530,14 @@ class LobbyScreen {
 
         g.setFont(GameConstants.F_HUD);
         g.setColor(GameConstants.C_GOLD);
-        g.drawString("P1 CONTROLS  (Arrow Keys)", c2x, y + 18);
+        g.drawString("P1 CONTROLS  (WASD / ARROWS)", c2x, y + 18);
         g.setFont(GameConstants.F_SMALL);
         g.setColor(GameConstants.C_WHITE);
         String[] ctrl = {
-            "Left/Right=Move  Up x2=Jump  Down=Crouch  Num8=Jetpack",
-            "Num5=Melee  Num0=Reload  Shift=Grenade  End=Pickup",
-            "PgDn=Swap Weapon  Arrow keys=Aim gun",
-            "Enter=Shoot  |  Mouse LMB=Fire (mouse aim)",
+            "Move=WASD or ARROWS | SPACE or UP=Jump | Crouch=S or DOWN",
+            "Jetpack=E or Num8 | Grenade=SHIFT or CTRL | Melee=Q or Num5",
+            "Reload=R or Num0 | Pickup=F or End | Swap=G or TAB",
+            "Mouse LMB=Fire (mouse aim) | ENTER=Shoot (arrow aim)",
         };
         int cy2 = y + 34;
         for (String s : ctrl) { g.drawString(s, c2x, cy2); cy2 += 22; }
@@ -1047,24 +1047,37 @@ class PostMatchScreen {
             nextY = renderPersonalResults(g, players, tx, ty);
         }
 
-        int by2 = Math.max(nextY + 14, 380); // Ensure rewards don't push too far or overlap
+        // Rewards section - Shifted down and centered
+        int by2 = H - 180; 
+        g.setColor(new Color(0, 0, 0, 120));
+        g.fillRoundRect(tx, by2 - 10, 680, 50, 8, 8); // Reward panel background
+        
         g.setFont(GameConstants.F_SUBHEAD); g.setColor(GameConstants.C_ACCENT2);
-        g.drawString("+"+xpG+" XP",tx,by2+20); g.setColor(GameConstants.C_GOLD2);
-        g.drawString("+"+coinsG+" coins",tx+130,by2+20);
+        g.drawString("+"+xpG+" XP", tx + 20, by2 + 22); 
+        g.setColor(GameConstants.C_GOLD2);
+        g.drawString("+"+coinsG+" coins", tx + 140, by2 + 22);
+        
         if (profile != null) {
-            UIRenderer.drawHBar(g,tx+260,by2+8,200,14,profile.levelProgress(),GameConstants.C_ACCENT);
-            g.setFont(GameConstants.F_SMALL); g.setColor(GameConstants.C_DIM); g.drawString("Lv "+profile.getLevel(),tx+465,by2+20);
+            // Level bar with background track
+            g.setColor(new Color(40, 40, 40, 200));
+            g.fillRoundRect(tx + 270, by2 + 10, 300, 16, 8, 8);
+            UIRenderer.drawHBar(g, tx + 270, by2 + 10, 300, 16, profile.levelProgress(), GameConstants.C_ACCENT);
+            g.setFont(GameConstants.F_HUD); g.setColor(GameConstants.C_WHITE); 
+            g.drawString("Lv "+profile.getLevel(), tx + 580, by2 + 23);
         }
 
-        if (unlocks!=null&&!unlocks.isEmpty()) {
-            int uy=by2+40;
+        if (unlocks!=null && !unlocks.isEmpty()) {
+            int uy = ty + (players.size() * 26) + 40;
             g.setFont(GameConstants.F_HUD); g.setColor(GameConstants.C_GOLD2);
-            g.drawString("UNLOCKED:",tx,uy); uy+=20;
-            for (String u:unlocks){ g.setFont(GameConstants.F_BODY); g.setColor(GameConstants.C_ACCENT); g.drawString("  > "+u,tx,uy); uy+=18; }
+            g.drawString("NEW UNLOCKS!", tx + 16, uy); uy += 22;
+            for (String u : unlocks) { 
+                g.setFont(GameConstants.F_BODY); g.setColor(GameConstants.C_ACCENT); 
+                g.drawString("  ★ "+u, tx + 16, uy); uy += 20; 
+            }
         }
 
-        UIRenderer.button(g,"[ PLAY AGAIN ]",CX-280,H-88,240,52,mx,my,false,new Color(35,100,15));
-        UIRenderer.button(g,"[ MAIN MENU ]", CX+40, H-88,240,52,mx,my,false,new Color(100,25,15));
+        UIRenderer.button(g, "[ PLAY AGAIN ]", CX - 270, H - 85, 230, 48, mx, my, false, new Color(35, 100, 15));
+        UIRenderer.button(g, "[ MAIN MENU ]", CX + 40, H - 85, 230, 48, mx, my, false, new Color(100, 25, 15));
     }
 
     private int renderPersonalResults(Graphics2D g, java.util.List<Player> players, int tx, int ty) {
