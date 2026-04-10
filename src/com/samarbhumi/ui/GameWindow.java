@@ -221,11 +221,6 @@ public class GameWindow extends JFrame {
 
             input.pollFrame();
 
-            int lmx = toLogicalX(mouseX);
-            int lmy = toLogicalY(mouseY);
-            input.mouseX = lmx;
-            input.mouseY = lmy;
-
             while (accumulator >= DT) { update(DT); accumulator -= DT; }
 
             // Handle ALL clicks in the queue for this frame
